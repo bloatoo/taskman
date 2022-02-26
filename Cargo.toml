@@ -1,0 +1,16 @@
+[package]
+name = "taskman"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.54"
+warp = "0.3.2"
+tokio-postgres = "0.7.5"
+
+[dependencies.tokio]
+version = "1.16.1"
+features = ["full"]
+
