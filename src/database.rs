@@ -1,4 +1,4 @@
-use crate::{Task, TaskProperty};
+use crate::Task;
 use tokio_postgres::{connect, Client as PSQClient, NoTls};
 
 pub struct Database {
@@ -36,14 +36,23 @@ impl Database {
             .client
             .query("SELECT id, title, completed FROM tasks;", &[])
             .await
-            .expect("Failed reading tasks from the database");
+            .expect("Error while reading tasks from database");
 
-        rows.iter()
-            .map(|x| Task::from_row(x).expect("Failed creating task from SQL row"))
-            .collect()
+        rows.iter().map(|x| Task::from_row(x).unwrap()).collect()
     }
 
-    pub async fn get_task(&self, prop: TaskProperty) -> Task {
-        unimplemented!()
+    pub async fn get_task(&self, id: u32) -> Option<Task> {
+        match self
+            .client
+            .query("SELECT * FROM tasks WHERE id = $1", &[&id])
+            .await
+        {
+            Ok(rows) => match rows.len() {
+                0 => None,
+                _ => Some(Task::from_row(&rows[0]).expect("Failed creating task from row")),
+            },
+
+            Err(_) => None,
+        }
     }
 }

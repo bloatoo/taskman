@@ -18,9 +18,16 @@ impl Task {
             completed,
         })
     }
-}
 
-pub enum TaskProperty {
-    Name(String),
-    Id(u32),
+    pub fn id(&self) -> &u32 {
+        &self.id
+    }
+
+    pub fn title(&self) -> &String {
+        &self.title
+    }
+
+    pub fn completed(&self) -> &bool {
+        &self.completed
+    }
 }
