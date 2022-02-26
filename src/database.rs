@@ -41,7 +41,7 @@ impl Database {
         rows.iter().map(|x| Task::from_row(x).unwrap()).collect()
     }
 
-    pub async fn get_task(&self, id: u32) -> Option<Task> {
+    pub async fn get_task(&self, id: i32) -> Option<Task> {
         match self
             .client
             .query("SELECT * FROM tasks WHERE id = $1", &[&id])
@@ -52,7 +52,7 @@ impl Database {
                 _ => Some(Task::from_row(&rows[0]).expect("Failed creating task from row")),
             },
 
-            Err(_) => None,
+            Err(e) => panic!("{}", e),
         }
     }
 }

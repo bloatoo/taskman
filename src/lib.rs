@@ -1,14 +1,16 @@
+use serde::{Deserialize, Serialize};
 pub mod database;
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Task {
-    id: u32,
+    id: i32,
     title: String,
     completed: bool,
 }
 
 impl Task {
     pub fn from_row(row: &tokio_postgres::Row) -> anyhow::Result<Self> {
-        let id: u32 = row.try_get("id")?;
+        let id: i32 = row.try_get("id")?;
         let title: String = row.try_get("title")?;
         let completed: bool = row.try_get("completed")?;
 
@@ -19,7 +21,7 @@ impl Task {
         })
     }
 
-    pub fn id(&self) -> &u32 {
+    pub fn id(&self) -> &i32 {
         &self.id
     }
 
