@@ -13,7 +13,7 @@ const default_state: State = {
   tasks: []
 };
 
-function Main() {
+const Main: React.FC = () => {
   let [state, setState] = useState<State>(default_state);
 
   let getTasks = async() => {
