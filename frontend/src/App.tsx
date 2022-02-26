@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
 import styles from './App.module.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+import Main from './components/main';
+import HabitView from './components/habit';
 
 function App() {
   let [state, setState] = useState("");
@@ -16,12 +20,17 @@ function App() {
   }, []);
 
 
-  let d = state == undefined ? <div></div> : <div>Title is {state}</div>;
+  let d = state == undefined ? <div></div> : <div className={styles.title}>Title is {state}</div>;
 
   return (
-    <div className="App">
-      {d}
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/">
+          <Route index element={<Main />} />
+          <Route path="habits" element={<HabitView />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
