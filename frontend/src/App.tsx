@@ -1,13 +1,26 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './App.module.css';
 
 function App() {
+  let [state, setState] = useState("");
+
+  let getTask = async() => {
+    let res = await fetch("http://localhost:8080/task/69");
+    let jsn = await res.json();
+    console.log(jsn);
+    setState(jsn.title);
+  }
+
   useEffect(() => {
-    fetch("http://localhost:8080/task/69").then(res=>res.json()).then(json=>console.log(json));
-  }, [])
+    getTask();
+  }, []);
+
+
+  let d = state == undefined ? <div></div> : <div>Title is {state}</div>;
 
   return (
     <div className="App">
+      {d}
     </div>
   );
 }
