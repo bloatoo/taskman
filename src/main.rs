@@ -1,3 +1,4 @@
+use std::env;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 use warp::Filter;
@@ -10,7 +11,14 @@ pub struct State {
 
 #[tokio::main]
 async fn main() {
-    let db = Database::connect("bloatoo", "taskman", "localhost")
+    let mut args = env::args();
+    args.next();
+
+    let db_username = args.next().unwrap();
+    let db_database = args.next().unwrap();
+    let db_host = args.next().unwrap();
+
+    let db = Database::connect(db_username, db_database, db_host)
         .await
         .unwrap();
 
