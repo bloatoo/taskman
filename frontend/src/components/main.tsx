@@ -3,6 +3,8 @@ import Navbar from './navbar';
 import styles from '../styles/main.module.css';
 import { Task } from '../interfaces';
 
+import TaskList from './tasklist';
+
 interface State {
   loaded: boolean,
   tasks: Task[]
@@ -33,25 +35,11 @@ const Main: React.FC = () => {
   }, []);
 
 
-  let d;
-  if(state.loaded) {
-    d = <div className={styles.title}>
-      { state.tasks.map(elem => {
-        return <div key={state.tasks.indexOf(elem)}>
-          {elem.title}
-        </div>
-      }) }
-    </div>
-  } else {
-    d = <div>Loading...</div>
-  }
-
   return (
     <div>
       <Navbar />
-      <div className="navbar" />
+      <TaskList loaded={state.loaded} tasks={state.tasks}/>
       <div className={styles.mainContainer} />
-      { d }
     </div>
   )
 }

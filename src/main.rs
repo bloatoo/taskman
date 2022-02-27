@@ -40,21 +40,26 @@ async fn get_task(id: i32, state: Arc<Mutex<State>>) -> anyhow::Result<impl Repl
     }
 }
 
+async fn get_tasks(state: Arc<Mutex<State>>) -> anyhow::Result<impl Reply, Rejection> {
+    let state_lock = state.lock().await;
+
+    let tasks = state_lock.db.get_tasks().await;
+
+    Ok(warp::reply::json(&tasks))
+}
+
 #[tokio::main]
 async fn web_server(state: Arc<Mutex<State>>) {
     let state = warp::any().map(move || state.clone());
 
-    let tasks = warp::path("task")
+    let task = warp::path("task")
         .and(warp::path::param::<i32>())
         .and(state.clone())
         .and_then(get_task);
 
-    let hello = warp::path("hello")
-        .and(warp::path::param::<String>())
-        .and(state.clone())
-        .map(|name, _state| format!("Hello, {}!", name));
+    let tasks = warp::path("tasks").and(state.clone()).and_then(get_tasks);
 
-    warp::serve(tasks.or(hello))
-        .run(([127, 0, 0, 1], 8080))
-        .await;
+    let api_routes = warp::path("api").and(task.or(tasks));
+
+    warp::serve(api_routes).run(([127, 0, 0, 1], 8080)).await;
 }
