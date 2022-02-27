@@ -8,11 +8,13 @@ import TaskList from './tasklist';
 interface State {
   loaded: boolean,
   tasks: Task[]
+  new_task: boolean,
 }
 
 const default_state: State = {
   loaded: false,
-  tasks: []
+  tasks: [],
+  new_task: false,
 };
 
 const Main: React.FC = () => {
@@ -25,6 +27,7 @@ const Main: React.FC = () => {
     let new_state: State = {
       loaded: true,
       tasks: tasks,
+      new_task: state.new_task,
     }
 
     setState(new_state);
@@ -38,8 +41,9 @@ const Main: React.FC = () => {
   return (
     <div>
       <Navbar />
-      <TaskList loaded={state.loaded} tasks={state.tasks}/>
-      <div className={styles.mainContainer} />
+      <div className={styles.mainContainer}>
+        <TaskList loaded={state.loaded} tasks={state.tasks}/>
+      </div>
     </div>
   )
 }
