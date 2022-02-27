@@ -1,4 +1,6 @@
 use crate::Task;
+use anyhow::Context;
+use rand::Rng;
 use tokio_postgres::{connect, Client as PSQClient, NoTls};
 
 pub struct Database {
@@ -33,6 +35,31 @@ impl Database {
         let _ = client.execute("CREATE TABLE IF NOT EXISTS tasks(id INTEGER PRIMARY KEY, title TEXT NOT NULL, completed BOOL NOT NULL);", &[]).await?;
 
         Ok(Self { client })
+    }
+
+    pub async fn insert_task(&self, title: String) -> anyhow::Result<i32> {
+        let mut id: i32 = rand::thread_rng().gen_range(0..1000);
+
+        while self
+            .client
+            .query("SELECT id FROM tasks where id = $1", &[&id])
+            .await
+            .expect("Failed reading from database")
+            .len()
+            != 0
+        {
+            id = rand::thread_rng().gen_range(0..1000);
+        }
+
+        self.client
+            .execute(
+                "INSERT INTO tasks(id, title, completed) VALUES($1, $2, $3)",
+                &[&id, &title, &false],
+            )
+            .await
+            .context("Failed inserting task into database")?;
+
+        Ok(id)
     }
 
     pub async fn get_tasks(&self) -> Vec<Task> {

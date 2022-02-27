@@ -1,6 +1,9 @@
+use serde::{Deserialize, Serialize};
 use std::env;
 use std::sync::Arc;
 use tokio::sync::Mutex;
+use warp::hyper::header;
+use warp::hyper::Method;
 use warp::{Filter, Rejection, Reply};
 
 use taskman::database::Database;
@@ -50,6 +53,35 @@ async fn get_tasks(state: Arc<Mutex<State>>) -> anyhow::Result<impl Reply, Rejec
     Ok(warp::reply::json(&tasks))
 }
 
+#[derive(Serialize, Deserialize)]
+pub struct NewTaskRequest {
+    pub title: String,
+}
+
+async fn new_task(
+    body: NewTaskRequest,
+    state: Arc<Mutex<State>>,
+) -> anyhow::Result<impl Reply, Rejection> {
+    let state_lock = state.lock().await;
+
+    match state_lock.db.insert_task(body.title).await {
+        Ok(id) => {
+            let json = serde_json::json!({
+                "id": id,
+            });
+
+            Ok(warp::reply::json(&json))
+        }
+
+        Err(why) => {
+            let json = serde_json::json!({ "error": "Internal server error" });
+            eprintln!("Error: {}", why);
+
+            Ok(warp::reply::json(&json))
+        }
+    }
+}
+
 #[tokio::main]
 async fn web_server(state: Arc<Mutex<State>>) {
     let state = warp::any().map(move || state.clone());
@@ -61,7 +93,20 @@ async fn web_server(state: Arc<Mutex<State>>) {
 
     let tasks = warp::path("tasks").and(state.clone()).and_then(get_tasks);
 
-    let api_routes = warp::path("api").and(task.or(tasks));
+    let new_task = warp::path("new_task")
+        .and(warp::post())
+        .and(warp::body::json())
+        .and(state.clone())
+        .and_then(new_task);
+
+    let cors = warp::cors()
+        .allow_methods(&[warp::hyper::Method::GET, Method::POST, Method::DELETE])
+        .allow_headers(vec![header::CONTENT_TYPE, header::AUTHORIZATION])
+        .allow_any_origin();
+
+    let api_routes = warp::path("api")
+        .and(task.or(tasks).or(new_task))
+        .with(cors);
 
     println!("Starting warp.");
     warp::serve(api_routes).run(([127, 0, 0, 1], 8080)).await;
