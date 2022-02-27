@@ -22,11 +22,15 @@ impl Database {
         )
         .await?;
 
+        // Start the postgres connection.
         tokio::spawn(async move {
             if let Err(e) = conn.await {
                 eprintln!("database connection error: {}", e);
             }
         });
+
+        // Check if the required tables exist and create them if they don't exist
+        let _ = client.execute("CREATE TABLE IF NOT EXISTS tasks(id INTEGER PRIMARY KEY, title TEXT NOT NULL, completed BOOL NOT NULL);", &[]).await?;
 
         Ok(Self { client })
     }

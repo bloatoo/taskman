@@ -22,6 +22,8 @@ async fn main() {
         .await
         .unwrap();
 
+    println!("Connected to database.");
+
     let state = Arc::new(Mutex::new(State { db }));
 
     std::thread::spawn(move || {
@@ -61,5 +63,6 @@ async fn web_server(state: Arc<Mutex<State>>) {
 
     let api_routes = warp::path("api").and(task.or(tasks));
 
+    println!("Starting warp.");
     warp::serve(api_routes).run(([127, 0, 0, 1], 8080)).await;
 }
