@@ -44,11 +44,37 @@ const TaskList: React.FC = () => {
     return json.id;
   }
 
+  let completeTask = async(task: ITask) => {
+    await fetch("http://localhost:8080/api/complete_task", {
+      method: 'POST',
+      body: JSON.stringify({ id: task.id, completed: !task.completed }),
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    let arr_task = tasks.find(a => a.id == task.id);
+    let idx = tasks.indexOf(arr_task!);
+    delete tasks[idx!];
+    task.completed = !task.completed;
+
+    switch(task.completed) {
+      case true: {
+        setTasks([...tasks.filter(x => x != null), task]);
+        break;
+      }
+      case false: {
+        setTasks([task, ...tasks.filter(x => x != null)])
+        break;
+      }
+    }
+  }
+
   useEffect(() => {
     getTasks();
   }, []);
 
-  let task_array = tasks.slice(state.start_idx, state.start_idx + 4).map(elem => <Task key={tasks.indexOf(elem)} core={elem} />)
+  let task_array = tasks
+    .slice(state.start_idx, state.start_idx + 4)
+    .map(elem => <Task onClick={() => completeTask(elem)} key={tasks.indexOf(elem)} core={elem} />)
 
   if(!state.loaded) { 
     return (
