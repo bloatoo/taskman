@@ -1,12 +1,11 @@
-import Navbar from './navbar';
 import styles from '../styles/main.module.css';
 import TaskList from './tasklist';
 
 const Main: React.FC = () => {
   return (
     <div>
-      <Navbar />
       <div className={styles.mainContainer}>
+        <div className={styles.placeholder}></div>
         <TaskList />
       </div>
     </div>

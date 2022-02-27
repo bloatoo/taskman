@@ -6,9 +6,16 @@ interface Props {
 }
 
 const Task: React.FC<Props> = ({ core }) => {
+  let completion_string = core.completed ? "Completed" : "Not completed";
+
   return (
     <div className={styles.task}>
-      <h1 className={styles.taskTitle}>{core.title}</h1>
+      { core.completed ?
+        <h1 className={styles.completedTaskTitle}>{core.title}</h1>
+      :
+        <h1 className={styles.uncompletedTaskTitle}>{core.title}</h1>
+      }
+      <p className={styles.completionState}>{completion_string}</p>
     </div>
   )
 }

@@ -4,3 +4,15 @@
     font-family: 'Inter';
     font-size: 50px;
 }
+
+.mainContainer {
+    display: flex;
+    flex-direction: space-between;
+    overflow: hidden;
+    height: 100vh;
+}
+
+.placeholder {
+    width: 50%;
+    background: #fff;
+}

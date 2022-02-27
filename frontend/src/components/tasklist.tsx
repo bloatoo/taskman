@@ -7,6 +7,7 @@ interface State {
   loaded: boolean,
   new_task: boolean,
   new_task_title: string
+  start_idx: number
 }
 
 
@@ -14,6 +15,7 @@ const default_state: State = {
   new_task: false,
   new_task_title: "",
   loaded: false,
+  start_idx: 0
 }
 
 const TaskList: React.FC = () => {
@@ -46,7 +48,7 @@ const TaskList: React.FC = () => {
     getTasks();
   }, []);
 
-  let task_array = tasks.map(elem => <Task key={tasks.indexOf(elem)} core={elem} />)
+  let task_array = tasks.slice(state.start_idx, state.start_idx + 4).map(elem => <Task key={tasks.indexOf(elem)} core={elem} />)
 
   if(!state.loaded) { 
     return (
@@ -54,19 +56,18 @@ const TaskList: React.FC = () => {
     )
   } else {
     return (
-      <div>
+      <div className={styles.taskList}>
         { task_array.length == 0 ?
-          <div>No tasks</div>
+          <div className={styles.noTasksText}>You have no tasks.</div>
             :
-          <div className={styles.taskList}>{ task_array }</div> 
+          task_array
         }
-        { state ?
           <div className={styles.newTask}>
-            <input type="text" value={state.new_task_title} onChange={(event) => {
+            <input className={styles.taskTitleInput} type="text" value={state.new_task_title} onChange={(event) => {
               setState({ ...state, new_task_title: event.target.value });
             }} placeholder="Task title" />
 
-            <button onClick={() => {
+            <button className={styles.addTaskButton} onClick={() => {
               submitTask(state.new_task_title).then(id => {
                 let new_task: ITask = {
                   title: state.new_task_title,
@@ -79,13 +80,6 @@ const TaskList: React.FC = () => {
               Add Task
             </button>
           </div>
-        : 
-          <button onClick={() => {
-            setState({ ...state, new_task: !state.new_task })
-          }} className={styles.newTaskButton}>
-            New Task
-          </button>
-        }
       </div>
     )
   }

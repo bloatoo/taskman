@@ -1,14 +1,46 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 .task {
-    background: #fbfbfb;
+    background: #ffffff;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 5vh;
+    flex-direction: column;
+    height: 10vh;
+    width: 70%;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 20px;
+    border-style: solid;
+    border-color: #eaeaea;
+    border-width: 1px;
+    transition: ease-in;
+    transition-duration: 100ms;
 }
 
-.taskTitle {
+.task:hover {
+    background: #f9f9f9;
+}
+
+.uncompletedTaskTitle {
     font-family: 'Inter';
-    font-size: 20px;
+    font-size: 32px;
+    color: #1d1f21;
+    margin: 5px;
+    font-weight: 700;
+}
+
+.completedTaskTitle {
+    font-family: 'Inter';
+    font-size: 32px;
+    color: #d9d9d9;
+    text-decoration: line-through;
+    margin: 5px;
+    font-weight: 700;
+}
+
+.completionState {
+    font-family: 'Inter';
+    font-size: 16px;
+    color: #aaa;
+    font-weight: 300;
+    margin: 5px;
 }
