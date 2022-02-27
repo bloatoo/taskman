@@ -62,6 +62,17 @@ impl Database {
         Ok(id)
     }
 
+    pub async fn complete_task(&self, id: i32, completion_state: bool) -> anyhow::Result<()> {
+        self.client
+            .execute(
+                "UPDATE tasks SET completed = $1 WHERE id = $2",
+                &[&completion_state, &id],
+            )
+            .await?;
+
+        Ok(())
+    }
+
     pub async fn get_tasks(&self) -> Vec<Task> {
         let rows = self
             .client

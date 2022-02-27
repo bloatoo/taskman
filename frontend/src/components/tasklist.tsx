@@ -47,7 +47,7 @@ const TaskList: React.FC = () => {
   let completeTask = async(task: ITask) => {
     await fetch("http://localhost:8080/api/complete_task", {
       method: 'POST',
-      body: JSON.stringify({ id: task.id, completed: !task.completed }),
+      body: JSON.stringify({ id: task.id, completion_state: !task.completed }),
       headers: { 'Content-Type': 'application/json' }
     });
 

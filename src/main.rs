@@ -54,6 +54,26 @@ async fn get_tasks(state: Arc<Mutex<State>>) -> anyhow::Result<impl Reply, Rejec
 }
 
 #[derive(Serialize, Deserialize)]
+pub struct CompleteTaskRequest {
+    pub completion_state: bool,
+    pub id: i32,
+}
+
+async fn complete_task(
+    body: CompleteTaskRequest,
+    state: Arc<Mutex<State>>,
+) -> anyhow::Result<impl Reply, Rejection> {
+    let state_lock = state.lock().await;
+
+    let _ = state_lock
+        .db
+        .complete_task(body.id, body.completion_state)
+        .await;
+
+    Ok(warp::reply::json(&""))
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct NewTaskRequest {
     pub title: String,
 }
@@ -99,13 +119,19 @@ async fn web_server(state: Arc<Mutex<State>>) {
         .and(state.clone())
         .and_then(new_task);
 
+    let complete_task = warp::path("complete_task")
+        .and(warp::post())
+        .and(warp::body::json())
+        .and(state.clone())
+        .and_then(complete_task);
+
     let cors = warp::cors()
         .allow_methods(&[warp::hyper::Method::GET, Method::POST, Method::DELETE])
         .allow_headers(vec![header::CONTENT_TYPE, header::AUTHORIZATION])
         .allow_any_origin();
 
     let api_routes = warp::path("api")
-        .and(task.or(tasks).or(new_task))
+        .and(task.or(tasks).or(new_task).or(complete_task))
         .with(cors);
 
     println!("Starting warp.");
