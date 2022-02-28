@@ -103,7 +103,7 @@ const TaskList: React.FC = () => {
   } else {
     let pageArray = [];
 
-    for(let i = 0; i < Math.round(tasks.length % 4 == 0 ? tasks.length / 4 : (tasks.length / 4) + 1); i++) {
+    for(let i = 0; i < Math.floor(tasks.length % 4 == 0 ? tasks.length / 4 : (tasks.length / 4) + 1); i++) {
       let name = i == page ? styles.currentPageIndicator : styles.pageIndicator;
       pageArray.push(<button key={i} onClick={() => setPage(i)} className={name}>{ i + 1 }</button>);
     }
@@ -133,18 +133,21 @@ const TaskList: React.FC = () => {
             </button>
           </div>
           <div className={styles.paginator}>
+            { tasks.length != 0 ?
             <button
               className={styles.switchPage}
               onClick={() => { if(page > 0) setPage(page - 1) }}
-            >{ "<" }</button>
+            >{ "<" }</button> : null }
 
             { /* <button className={styles.mainPage}>{page + 1}</button> */ }
             { pageArray }
 
+            { tasks.length != 0 ?
             <button
               className={styles.switchPage}
               onClick={() => { if(page * 4 <= taskArray.length) setPage(page + 1) }}
-            >{ ">" }</button>
+                >{ ">" }</button>
+              : null }
           </div>
       </div>
     )
