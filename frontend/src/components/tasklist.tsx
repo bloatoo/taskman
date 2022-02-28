@@ -21,7 +21,6 @@ const TaskList: React.FC = () => {
   let getTasks = async() => {
     let res = await fetch("http://localhost:8080/api/tasks");
     let tasks: ITask[] = await res.json();
-    console.log(tasks);
 
     tasks.map(x => x.created_at_time = x.created_at_time.split(".")[0]);
 
@@ -72,7 +71,7 @@ const TaskList: React.FC = () => {
 
   useEffect(() => {
     getTasks();
-  });
+  }, []);
 
   let nPages = Math.floor(tasks.length % 4 === 0 ? tasks.length / 4 : tasks.length / 4 + 1);
 
@@ -80,7 +79,7 @@ const TaskList: React.FC = () => {
     if(page + 1 > nPages && nPages > 0) {
       setPage(prev => prev - 1);
     }
-  }, [tasks, nPages, page])
+  }, [tasks])
 
   let taskArray = tasks
     .slice(page * 4, page * 4 + 4)
