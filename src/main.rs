@@ -126,11 +126,9 @@ async fn new_task(
 
     match state_lock.db.insert_task(body.title).await {
         Ok(id) => {
-            let json = serde_json::json!({
-                "id": id,
-            });
+            let task = state_lock.db.get_task(id).await.unwrap();
 
-            Ok(warp::reply::json(&json))
+            Ok(warp::reply::json(&task))
         }
 
         Err(why) => {

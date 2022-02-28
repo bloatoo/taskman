@@ -1,7 +1,23 @@
 .navbar {
-    height: 50px;
-    background: #fbfbfb;
+    height: 7vh;
+    background: #ffffff;
     border-bottom-style: solid;
-    border-width: 2px;
+    border-width: 1px;
     border-color: #eaeaea;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.items {
+
+}
+
+.items a {
+    margin-right: 40px;
+    font-family: 'Inter';
+    font-size: 16px;
+    color: #777;
+    font-weight: 400;
 }

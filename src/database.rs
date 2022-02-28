@@ -95,7 +95,10 @@ impl Database {
     pub async fn get_tasks(&self) -> Vec<Task> {
         let rows = self
             .client
-            .query("SELECT id, title, completed FROM tasks;", &[])
+            .query(
+                "SELECT id, title, completed, created_at_date, created_at_time FROM tasks;",
+                &[],
+            )
             .await
             .expect("Error while reading tasks from database");
 

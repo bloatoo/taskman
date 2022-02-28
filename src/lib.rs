@@ -1,11 +1,14 @@
+use chrono::{NaiveDate, NaiveTime};
 use serde::{Deserialize, Serialize};
 pub mod database;
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Task {
     id: i32,
     title: String,
     completed: bool,
+    created_at_date: NaiveDate,
+    created_at_time: NaiveTime,
 }
 
 impl Task {
@@ -13,11 +16,15 @@ impl Task {
         let id: i32 = row.try_get("id")?;
         let title: String = row.try_get("title")?;
         let completed: bool = row.try_get("completed")?;
+        let created_at_date: NaiveDate = row.try_get("created_at_date")?;
+        let created_at_time: NaiveTime = row.try_get("created_at_time")?;
 
         Ok(Self {
             id,
             title,
             completed,
+            created_at_date,
+            created_at_time,
         })
     }
 

@@ -31,6 +31,7 @@ const Task: React.FC<Props> = ({ core, onComplete, onDelete }) => {
           onClick={onComplete}
           className={styles.completionState}
         >{completion_string} { `| ID: ${core.id}` }</p>
+        <p className={styles.completionState}>{core.created_at_date} {core.created_at_time}</p>
       </div>
       <button onClick={() => onDelete()} className={styles.deleteButton}>🞩</button>
     </div>
