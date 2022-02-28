@@ -5,7 +5,7 @@ import EditableTaskTitle from './editableTaskTitle';
 interface Props {
   core: ITask
   onComplete: () => Promise<any>
-  //onRename: () => Promise<any>
+  onDelete: () => Promise<any>
 }
 
 const Task: React.FC<Props> = ({ core, onComplete, }) => {

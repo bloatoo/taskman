@@ -25,13 +25,37 @@
     font-size: 15px;
 }*/
 
-.mainPage {
+.pageIndicator {
     background: #fbfbfb;
     border: none;
     font-family: 'Inter';
     font-size: 17px;
     font-weight: 700;
     color: #aaa;
+    margin: 10px;
+    width: 5vh;
+    height: 5vh;
+    transition: ease-in;
+    transition-duration: 100ms;
+}
+
+.pageIndicator:hover {
+    color: #000;
+    cursor: pointer;
+}
+
+.currentPageIndicator {
+    background: blue;
+    border: none;
+    font-family: 'Inter';
+    font-size: 17px;
+    font-weight: 700;
+    color: #333;
+    margin: 10px;
+    height: 5vh;
+    width: 5vh;
+    color: #fff;
+    border-radius: 100%;
 }
 
 .paginator {
@@ -47,7 +71,6 @@
     background: #fbfbfb;
     width: 5vh;
     height: 5vh;
-    margin: 20px;
     color: #aaa;
     border-radius: 100%;
     border-color: #eaeaea;
@@ -62,7 +85,7 @@
 }
 
 .switchPage:hover {
-    background: #fbfbfb;
+    color: #000;
     cursor: pointer;
 }
 

@@ -58,6 +58,7 @@ const TaskList: React.FC = () => {
     task.completed = !task.completed;
 
     let new_tasks = tasks.filter(x => x != null);
+
     switch(task.completed) {
       case true: {
         setTasks([...new_tasks.slice(0, idx), task, ...new_tasks.slice(idx, new_tasks.length)]);
@@ -70,15 +71,18 @@ const TaskList: React.FC = () => {
     }
   }
 
+  let deleteTask = async(task: ITask) => {}
+
   useEffect(() => {
     getTasks();
   }, []);
 
-  let task_array = tasks
+  let taskArray = tasks
     .slice(page * 4 + state.start_idx, page * 4 + 4)
     .map(elem =>
       <Task
         onComplete={() => completeTask(elem)}
+        onDelete={() => deleteTask(elem)}
         key={tasks.indexOf(elem)}
         core={elem} 
       />
@@ -89,12 +93,18 @@ const TaskList: React.FC = () => {
       <div>Loading...</div>
     )
   } else {
+    let pageArray = [];
+
+    for(let i = 0; i < Math.round(tasks.length % 4 == 0 ? tasks.length / 4 : (tasks.length / 4) + 1); i++) {
+      let name = i == page ? styles.currentPageIndicator : styles.pageIndicator;
+      pageArray.push(<button key={i} onClick={() => setPage(i)} className={name}>{ i + 1 }</button>);
+    }
     return (
       <div className={styles.taskList}>
-        { task_array.length == 0 ?
+        { taskArray.length == 0 ?
           <div className={styles.noTasksText}>You have no tasks.</div>
             :
-          task_array
+          taskArray
         }
           <div className={styles.newTask}>
             <input className={styles.taskTitleInput} type="text" value={state.new_task_title} onChange={(event) => {
@@ -120,11 +130,12 @@ const TaskList: React.FC = () => {
               onClick={() => { if(page > 0) setPage(page - 1) }}
             >{ "<" }</button>
 
-            <button className={styles.mainPage}>{page + 1}</button>
+            { /* <button className={styles.mainPage}>{page + 1}</button> */ }
+            { pageArray }
 
             <button
               className={styles.switchPage}
-              onClick={() => { if(page * 4 <= task_array.length) setPage(page + 1) }}
+              onClick={() => { if(page * 4 <= taskArray.length) setPage(page + 1) }}
             >{ ">" }</button>
           </div>
       </div>
