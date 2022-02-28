@@ -13,7 +13,7 @@
     border-width: 1px;
 }
 
-.mainPage {
+/*.mainPage {
     background: blue;
     color: #fff;
     height: 5vh;
@@ -23,6 +23,15 @@
     font-family: 'Inter';
     font-weight: 700;
     font-size: 15px;
+}*/
+
+.mainPage {
+    background: #fbfbfb;
+    border: none;
+    font-family: 'Inter';
+    font-size: 17px;
+    font-weight: 700;
+    color: #aaa;
 }
 
 .paginator {
@@ -35,7 +44,7 @@
 }
 
 .switchPage {
-    background: #ffffff;
+    background: #fbfbfb;
     width: 5vh;
     height: 5vh;
     margin: 20px;
@@ -46,6 +55,15 @@
     border-style: solid;
     font-family: 'Inter';
     font-weight: 700;
+    font-size: 15px;
+    transition: ease-in;
+    transition-duration: 100ms;
+    border: none;
+}
+
+.switchPage:hover {
+    background: #fbfbfb;
+    cursor: pointer;
 }
 
 .addTaskButton {

@@ -115,9 +115,17 @@ const TaskList: React.FC = () => {
             </button>
           </div>
           <div className={styles.paginator}>
-            <button className={styles.switchPage} onClick={() => setPage(page - 1)}>{ "<" }</button>
-            <button className={styles.mainPage} onClick={() => setPage(page + 1)}>{page + 1}</button>
-            <button className={styles.switchPage} onClick={() => setPage(page + 1)}>{ ">" }</button>
+            <button
+              className={styles.switchPage}
+              onClick={() => { if(page > 0) setPage(page - 1) }}
+            >{ "<" }</button>
+
+            <button className={styles.mainPage}>{page + 1}</button>
+
+            <button
+              className={styles.switchPage}
+              onClick={() => { if(page * 4 <= task_array.length) setPage(page + 1) }}
+            >{ ">" }</button>
           </div>
       </div>
     )
