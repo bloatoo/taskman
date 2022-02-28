@@ -54,6 +54,22 @@ async fn get_tasks(state: Arc<Mutex<State>>) -> anyhow::Result<impl Reply, Rejec
 }
 
 #[derive(Serialize, Deserialize)]
+struct DeleteTaskRequest {
+    pub id: i32,
+}
+
+async fn delete_task(
+    body: DeleteTaskRequest,
+    state: Arc<Mutex<State>>,
+) -> anyhow::Result<impl Reply, Rejection> {
+    let state_lock = state.lock().await;
+
+    state_lock.db.delete_task(body.id).await.unwrap();
+
+    Ok(warp::reply::json(&""))
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct CompleteTaskRequest {
     pub completion_state: bool,
     pub id: i32,
@@ -155,6 +171,12 @@ async fn web_server(state: Arc<Mutex<State>>) {
         .and(state.clone())
         .and_then(rename_task);
 
+    let delete_task = warp::path("delete_task")
+        .and(warp::post())
+        .and(warp::body::json())
+        .and(state.clone())
+        .and_then(delete_task);
+
     let cors = warp::cors()
         .allow_methods(&[warp::hyper::Method::GET, Method::POST, Method::DELETE])
         .allow_headers(vec![header::CONTENT_TYPE, header::AUTHORIZATION])
@@ -165,7 +187,8 @@ async fn web_server(state: Arc<Mutex<State>>) {
             task.or(tasks)
                 .or(new_task)
                 .or(complete_task)
-                .or(rename_task),
+                .or(rename_task)
+                .or(delete_task),
         )
         .with(cors);
 

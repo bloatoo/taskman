@@ -62,6 +62,14 @@ impl Database {
         Ok(id)
     }
 
+    pub async fn delete_task(&self, id: i32) -> anyhow::Result<()> {
+        self.client
+            .execute("DELETE FROM tasks WHERE id = $1", &[&id])
+            .await?;
+
+        Ok(())
+    }
+
     pub async fn rename_task(&self, id: i32, new_title: String) -> anyhow::Result<()> {
         self.client
             .execute(
