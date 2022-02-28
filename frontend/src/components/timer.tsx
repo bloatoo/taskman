@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styles from '../styles/timer.module.css';
 
 interface Props {
@@ -22,7 +22,7 @@ const Timer: React.FC<Props> = ({ initialSeconds }) => {
         { f == null ?
           <button className={styles.startButton} onClick={() =>{
             setF(setInterval(() => {
-              if(seconds == 0) {
+              if(seconds === 0) {
                 if(isBreak) {
                   setSeconds(initialSeconds)
                 } else {
@@ -33,7 +33,7 @@ const Timer: React.FC<Props> = ({ initialSeconds }) => {
                 setSeconds(prevSeconds =>  prevSeconds - 1)
               }
             }, 1000));
-          }}>{ seconds == initialSeconds ? "Start" : "Resume" }</button>
+          }}>{ seconds === initialSeconds ? "Start" : "Resume" }</button>
           :
           <button className={styles.pauseButton} onClick={() => {
             clearInterval(f);

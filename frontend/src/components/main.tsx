@@ -2,7 +2,6 @@ import styles from '../styles/main.module.css';
 import TaskList from './tasklist';
 import Navbar from './navbar';
 import Timer from './timer';
-import { useState, useEffect } from 'react';
 
 interface Props {
   onDarkMode: (darkMode: boolean) => any;

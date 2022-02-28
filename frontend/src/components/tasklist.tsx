@@ -5,17 +5,12 @@ import { useState, useEffect } from 'react';
 
 interface State {
   loaded: boolean,
-  new_task: boolean,
   new_task_title: string
-  start_idx: number
 }
 
-
 const default_state: State = {
-  new_task: false,
   new_task_title: "",
   loaded: false,
-  start_idx: 0
 }
 
 const TaskList: React.FC = () => {
@@ -55,7 +50,7 @@ const TaskList: React.FC = () => {
       headers: { 'Content-Type': 'application/json' }
     });
 
-    let arr_task = tasks.find(a => a.id == task.id);
+    let arr_task = tasks.find(a => a.id === task.id);
     let idx = tasks.indexOf(arr_task!);
     delete tasks[idx!];
     task.completed = !task.completed;
@@ -72,23 +67,23 @@ const TaskList: React.FC = () => {
       headers: { 'Content-Type': 'application/json' },
     });
 
-    setTasks(tasks.filter(x => x.id != task.id));
+    setTasks(tasks.filter(x => x.id !== task.id));
   }
 
   useEffect(() => {
     getTasks();
-  }, []);
+  });
 
-  let nPages = Math.floor(tasks.length % 4 == 0 ? tasks.length / 4 : tasks.length / 4 + 1);
+  let nPages = Math.floor(tasks.length % 4 === 0 ? tasks.length / 4 : tasks.length / 4 + 1);
 
   useEffect(() => {
     if(page + 1 > nPages && nPages > 0) {
       setPage(prev => prev - 1);
     }
-  }, [tasks])
+  }, [tasks, nPages, page])
 
   let taskArray = tasks
-    .slice(page * 4 + state.start_idx, page * 4 + 4)
+    .slice(page * 4, page * 4 + 4)
     .map(elem =>
       <Task
         onComplete={() => completeTask(elem)}
@@ -104,15 +99,14 @@ const TaskList: React.FC = () => {
     )
   } else {
     let pageArray = [];
-    let nPages = Math.floor(tasks.length % 4 == 0 ? tasks.length / 4 : tasks.length / 4 + 1);
 
     for(let i = 0; i < nPages; i++) {
-      let name = i == page ? styles.currentPageIndicator : styles.pageIndicator;
+      let name = i === page ? styles.currentPageIndicator : styles.pageIndicator;
       pageArray.push(<button key={i} onClick={() => setPage(i)} className={name}>{ i + 1 }</button>);
     }
     return (
       <div className={styles.taskList}>
-        { taskArray.length == 0 ?
+        { taskArray.length === 0 ?
           <div className={styles.noTasksText}>You have no tasks.</div>
             :
           taskArray
@@ -134,13 +128,13 @@ const TaskList: React.FC = () => {
 
           { nPages > 1 ?
           <div className={styles.paginator}>
-            { tasks.length != 0 ?
+            { tasks.length !== 0 ?
             <button
               className={styles.switchPage}
               onClick={() => { if(page > 0) setPage(page - 1) }}
             >{ "<" }</button> : null }
             { pageArray }
-            { tasks.length != 0 ?
+            { tasks.length !== 0 ?
             <button
               className={styles.switchPage}
               onClick={() => { if(page + 1 < nPages) setPage(page + 1) }}

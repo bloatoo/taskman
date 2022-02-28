@@ -20,7 +20,7 @@ const Navbar: React.FC<Props> = ({ onDarkMode }) => {
     <div className={styles.navbar}>
       <div></div>
       <div className={styles.items}>
-          <a onClick={() => {
+        <a href="/" onClick={() => {
               const json = JSON.stringify(!darkMode);
               localStorage.setItem("site-dark-mode", json);
               onDarkMode(!darkMode);
