@@ -68,13 +68,22 @@ const TaskList: React.FC = () => {
     }
   }
 
+  let renameTask = async(_task: ITask) => {}
+
   useEffect(() => {
     getTasks();
   }, []);
 
   let task_array = tasks
     .slice(state.start_idx, state.start_idx + 4)
-    .map(elem => <Task onClick={() => completeTask(elem)} key={tasks.indexOf(elem)} core={elem} />)
+    .map(elem =>
+      <Task
+        onComplete={() => completeTask(elem)}
+        onRename={() => renameTask(elem)}
+        key={tasks.indexOf(elem)}
+        core={elem} 
+      />
+    )
 
   if(!state.loaded) { 
     return (

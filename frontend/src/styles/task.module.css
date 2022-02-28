@@ -14,28 +14,14 @@
     border-width: 1px;
     transition: ease-in;
     transition-duration: 100ms;
+    overflow: hidden;
 }
 
 .task:hover {
     background: #f9f9f9;
 }
 
-.uncompletedTaskTitle {
-    font-family: 'Inter';
-    font-size: 32px;
-    color: #1d1f21;
-    margin: 5px;
-    font-weight: 700;
-}
 
-.completedTaskTitle {
-    font-family: 'Inter';
-    font-size: 32px;
-    color: #d9d9d9;
-    text-decoration: line-through;
-    margin: 5px;
-    font-weight: 700;
-}
 
 .completionState {
     font-family: 'Inter';
@@ -43,4 +29,12 @@
     color: #aaa;
     font-weight: 300;
     margin: 5px;
+    transition: ease-in;
+    transition-duration: 100ms;
+}
+
+.completionState:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #0b75f9;
 }

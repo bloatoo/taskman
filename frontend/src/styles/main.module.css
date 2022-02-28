@@ -15,4 +15,7 @@
 .placeholder {
     width: 50%;
     background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

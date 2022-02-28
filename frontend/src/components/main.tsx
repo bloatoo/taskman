@@ -5,7 +5,8 @@ const Main: React.FC = () => {
   return (
     <div>
       <div className={styles.mainContainer}>
-        <div className={styles.placeholder}></div>
+        <div className={styles.placeholder}>
+        </div>
         <TaskList />
       </div>
     </div>
