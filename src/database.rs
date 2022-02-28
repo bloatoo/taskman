@@ -62,6 +62,17 @@ impl Database {
         Ok(id)
     }
 
+    pub async fn rename_task(&self, id: i32, new_title: String) -> anyhow::Result<()> {
+        self.client
+            .execute(
+                "UPDATE tasks SET title = $1 WHERE id = $2",
+                &[&new_title, &id],
+            )
+            .await?;
+
+        Ok(())
+    }
+
     pub async fn complete_task(&self, id: i32, completion_state: bool) -> anyhow::Result<()> {
         self.client
             .execute(

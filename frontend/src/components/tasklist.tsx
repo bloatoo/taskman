@@ -68,8 +68,6 @@ const TaskList: React.FC = () => {
     }
   }
 
-  let renameTask = async(_task: ITask) => {}
-
   useEffect(() => {
     getTasks();
   }, []);
@@ -79,7 +77,6 @@ const TaskList: React.FC = () => {
     .map(elem =>
       <Task
         onComplete={() => completeTask(elem)}
-        onRename={() => renameTask(elem)}
         key={tasks.indexOf(elem)}
         core={elem} 
       />

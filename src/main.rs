@@ -74,6 +74,30 @@ async fn complete_task(
 }
 
 #[derive(Serialize, Deserialize)]
+pub struct RenameTaskRequest {
+    id: i32,
+    new_title: String,
+}
+
+async fn rename_task(
+    body: RenameTaskRequest,
+    state: Arc<Mutex<State>>,
+) -> Result<impl Reply, Rejection> {
+    let state_lock = state.lock().await;
+
+    match state_lock.db.rename_task(body.id, body.new_title).await {
+        Ok(_) => Ok(warp::reply::json(&"")),
+        Err(why) => {
+            let json = serde_json::json!({
+                "error": why.to_string(),
+            });
+
+            Ok(warp::reply::json(&json))
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct NewTaskRequest {
     pub title: String,
 }
@@ -94,7 +118,7 @@ async fn new_task(
         }
 
         Err(why) => {
-            let json = serde_json::json!({ "error": "Internal server error" });
+            let json = serde_json::json!({ "error": why.to_string() });
             eprintln!("Error: {}", why);
 
             Ok(warp::reply::json(&json))
@@ -125,13 +149,24 @@ async fn web_server(state: Arc<Mutex<State>>) {
         .and(state.clone())
         .and_then(complete_task);
 
+    let rename_task = warp::path("rename_task")
+        .and(warp::post())
+        .and(warp::body::json())
+        .and(state.clone())
+        .and_then(rename_task);
+
     let cors = warp::cors()
         .allow_methods(&[warp::hyper::Method::GET, Method::POST, Method::DELETE])
         .allow_headers(vec![header::CONTENT_TYPE, header::AUTHORIZATION])
         .allow_any_origin();
 
     let api_routes = warp::path("api")
-        .and(task.or(tasks).or(new_task).or(complete_task))
+        .and(
+            task.or(tasks)
+                .or(new_task)
+                .or(complete_task)
+                .or(rename_task),
+        )
         .with(cors);
 
     println!("Starting warp.");
