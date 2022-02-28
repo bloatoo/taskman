@@ -62,16 +62,7 @@ const TaskList: React.FC = () => {
 
     let new_tasks = tasks.filter(x => x != null);
 
-    switch(task.completed) {
-      case true: {
-        setTasks([...new_tasks.slice(0, idx), task, ...new_tasks.slice(idx, new_tasks.length)]);
-        break;
-      }
-      case false: {
-        setTasks([...new_tasks.slice(0, idx), task, ...new_tasks.slice(idx, new_tasks.length)]);
-        break;
-      }
-    }
+    setTasks([...new_tasks.slice(0, idx), task, ...new_tasks.slice(idx, new_tasks.length)]);
   }
 
   let deleteTask = async(task: ITask) => {
@@ -138,10 +129,7 @@ const TaskList: React.FC = () => {
               className={styles.switchPage}
               onClick={() => { if(page > 0) setPage(page - 1) }}
             >{ "<" }</button> : null }
-
-            { /* <button className={styles.mainPage}>{page + 1}</button> */ }
             { pageArray }
-
             { tasks.length != 0 ?
             <button
               className={styles.switchPage}

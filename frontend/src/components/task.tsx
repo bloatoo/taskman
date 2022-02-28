@@ -10,8 +10,6 @@ interface Props {
 }
 
 const Task: React.FC<Props> = ({ core, onComplete, onDelete }) => {
-  let completion_string = core.completed ? "Completed" : "Not completed";
-
   let onRename = async(new_title: string) => {
     await fetch("http://localhost:8080/api/rename_task", {
       method: 'POST',
