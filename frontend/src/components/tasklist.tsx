@@ -105,9 +105,9 @@ const TaskList: React.FC = () => {
     )
   } else {
     let pageArray = [];
-    let len = tasks.length / 4;
+    let nPages = Math.floor(tasks.length % 4 == 0 ? tasks.length / 4 : tasks.length / 4 + 1);
 
-    for(let i = 0; i < Math.floor(tasks.length % 4 == 0 ? len : len + 1); i++) {
+    for(let i = 0; i < nPages; i++) {
       let name = i == page ? styles.currentPageIndicator : styles.pageIndicator;
       pageArray.push(<button key={i} onClick={() => setPage(i)} className={name}>{ i + 1 }</button>);
     }
@@ -145,7 +145,7 @@ const TaskList: React.FC = () => {
             { tasks.length != 0 ?
             <button
               className={styles.switchPage}
-              onClick={() => { if(page * 4 <= taskArray.length) setPage(page + 1) }}
+              onClick={() => { if(page + 1 < nPages) setPage(page + 1) }}
                 >{ ">" }</button>
               : null }
           </div>
