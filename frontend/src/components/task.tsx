@@ -8,7 +8,7 @@ interface Props {
   onDelete: () => Promise<any>
 }
 
-const Task: React.FC<Props> = ({ core, onComplete, }) => {
+const Task: React.FC<Props> = ({ core, onComplete, onDelete }) => {
   let completion_string = core.completed ? "Completed" : "Not completed";
 
   let onRename = async(new_title: string) => {
@@ -21,8 +21,18 @@ const Task: React.FC<Props> = ({ core, onComplete, }) => {
 
   return (
     <div className={styles.task}>
-      <EditableTaskTitle text={core.title} completed={core.completed} onRename={onRename} />
-      <p onClick={onComplete} className={styles.completionState}>{completion_string} { `| ID: ${core.id}` }</p>
+      <div className={styles.textContainer}>
+        <EditableTaskTitle
+          text={core.title}
+          completed={core.completed}
+          onRename={onRename}
+        />
+        <p
+          onClick={onComplete}
+          className={styles.completionState}
+        >{completion_string} { `| ID: ${core.id}` }</p>
+      </div>
+      <button onClick={() => onDelete()} className={styles.deleteButton}>🞩</button>
     </div>
   )
 }

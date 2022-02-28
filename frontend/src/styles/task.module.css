@@ -3,7 +3,8 @@
 .task {
     background: #ffffff;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
     height: 10vh;
     width: 70%;
     padding: 20px;
@@ -21,7 +22,21 @@
     background: #f9f9f9;
 }
 
+.deleteButton {
+    height: 5vh;   
+    width: 5vh;
+    font-size: 20px;
+    border: none;
+    background: rgba(1, 1, 1, 0);
+    color: #aaa;
+    transition: ease-in;
+    transition-duration: 100ms;
+}
 
+.deleteButton:hover {
+    cursor: pointer;
+    color: red;
+}
 
 .completionState {
     font-family: 'Inter';

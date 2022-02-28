@@ -71,7 +71,15 @@ const TaskList: React.FC = () => {
     }
   }
 
-  let deleteTask = async(task: ITask) => {}
+  let deleteTask = async(task: ITask) => {
+    await fetch("http://localhost:8080/api/delete_task", {
+      method: 'POST',
+      body: JSON.stringify({ id: task.id }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    setTasks(tasks.filter(x => x.id != task.id));
+  }
 
   useEffect(() => {
     getTasks();
