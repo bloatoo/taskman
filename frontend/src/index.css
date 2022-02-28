@@ -2,3 +2,20 @@
     padding: 0;
     margin: 0;
 }
+
+:root {
+    --background: #fff;
+    --inputBackground: #fff;
+    --placeholder: #000;
+    --foreground: #1d1f21;
+    --lightForeground: #aaa;
+    --inverseForeground: #fff;
+    --taskListBackground: #fbfbfb;
+    --border: #eaeaea;
+    --hoverBackground: #f9f9f9;
+    --buttonBackground: blue;
+}
+
+::placeholder {
+    color: var(--placeholder);
+}

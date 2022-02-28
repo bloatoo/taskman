@@ -7,15 +7,17 @@
 
 .mainContainer {
     display: flex;
-    flex-direction: space-between;
+    background: var(--background);
+    flex-direction: row;
     overflow: hidden;
     height: 93vh;
 }
 
 .placeholder {
     width: 50%;
-    background: #fff;
+    background: var(--background);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }

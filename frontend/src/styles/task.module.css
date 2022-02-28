@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 .task {
-    background: #ffffff;
+    background: var(--background);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -11,7 +11,7 @@
     margin: 10px;
     border-radius: 20px;
     border-style: solid;
-    border-color: #eaeaea;
+    border-color: var(--border);
     border-width: 1px;
     transition: ease-in;
     transition-duration: 100ms;
@@ -19,7 +19,7 @@
 }
 
 .task:hover {
-    background: #f9f9f9;
+    background: var(--hoverBackground);
 }
 
 .deleteButton {
@@ -28,7 +28,7 @@
     font-size: 20px;
     border: none;
     background: rgba(1, 1, 1, 0);
-    color: #aaa;
+    color: var(--lightForeground);
     transition: ease-in;
     transition-duration: 100ms;
 }
@@ -41,7 +41,7 @@
 .completionState {
     font-family: 'Inter';
     font-size: 16px;
-    color: #aaa;
+    color: var(--lightForeground);
     font-weight: 300;
     margin: 5px;
     transition: ease-in;

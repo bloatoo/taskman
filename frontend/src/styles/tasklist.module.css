@@ -7,15 +7,15 @@
     align-items: center;
     height: 100%;
     width: 50%;
-    background: #fbfbfb;
-    border-style: solid;
-    border-color: #ebebeb;
+    background: var(--taskListBackground);
+    border-left-style: solid;
+    border-color: var(--border);
     border-width: 1px;
 }
 
 /*.mainPage {
-    background: blue;
-    color: #fff;
+    background: var(--buttonBackground);
+    color: var(--lightBackground);
     height: 5vh;
     width: 5vh;
     border: none;
@@ -26,12 +26,12 @@
 }*/
 
 .pageIndicator {
-    background: #fbfbfb;
+    background: rgba(1, 1, 1, 0);
     border: none;
     font-family: 'Inter';
     font-size: 17px;
     font-weight: 700;
-    color: #aaa;
+    color: var(--lightForeground);
     margin: 10px;
     width: 5vh;
     height: 5vh;
@@ -45,16 +45,15 @@
 }
 
 .currentPageIndicator {
-    background: blue;
+    background: var(--buttonBackground);
     border: none;
     font-family: 'Inter';
     font-size: 17px;
     font-weight: 700;
-    color: #333;
+    color: var(--inverseForeground);
     margin: 10px;
     height: 5vh;
     width: 5vh;
-    color: #fff;
     border-radius: 100%;
 }
 
@@ -68,10 +67,10 @@
 }
 
 .switchPage {
-    background: #fbfbfb;
+    background: rgba(1, 1, 1, 0);
     width: 5vh;
     height: 5vh;
-    color: #aaa;
+    color: var(--lightForeground);
     border-radius: 100%;
     border-color: #eaeaea;
     border-width: 1px;
@@ -91,7 +90,7 @@
 
 .addTaskButton {
     /* #0b75f9 */
-    background: blue;
+    background: var(--buttonBackground);
     color: white;
     font-family: 'Inter';
     font-weight: 700;
@@ -116,8 +115,9 @@
 }
 
 .taskTitleInput {
-    background: #ffffff;
-    border-color: #eaeaea;
+    background: var(--inputBackground);
+    border-color: var(--border);
+    color: var(--foreground);
     border-width: 1px;
     border-style: solid;
     border-radius: 20px;
