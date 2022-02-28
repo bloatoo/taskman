@@ -79,6 +79,14 @@ const TaskList: React.FC = () => {
     getTasks();
   }, []);
 
+  let nPages = Math.floor(tasks.length % 4 == 0 ? tasks.length / 4 : tasks.length / 4 + 1);
+
+  useEffect(() => {
+    if(page + 1 > nPages && nPages > 0) {
+      setPage(prev => prev - 1);
+    }
+  }, [tasks])
+
   let taskArray = tasks
     .slice(page * 4 + state.start_idx, page * 4 + 4)
     .map(elem =>
@@ -123,6 +131,8 @@ const TaskList: React.FC = () => {
               Add Task
             </button>
           </div>
+
+          { nPages > 1 ?
           <div className={styles.paginator}>
             { tasks.length != 0 ?
             <button
@@ -137,6 +147,7 @@ const TaskList: React.FC = () => {
                 >{ ">" }</button>
               : null }
           </div>
+          : null }
       </div>
     )
   }

@@ -12,9 +12,6 @@ const Navbar: React.FC<Props> = ({ onDarkMode }) => {
     const json = JSON.parse(localStorage.getItem("site-dark-mode")!);
 
     if(json !== null) {
-      if(json === true) {
-        onDarkMode(true);
-      }
       setDarkMode(json);
     }
   }, []);
