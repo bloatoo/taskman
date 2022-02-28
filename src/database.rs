@@ -92,7 +92,7 @@ impl Database {
             .expect("Error while reading tasks from database");
 
         let mut task_vec: Vec<Task> = rows.iter().map(|x| Task::from_row(x).unwrap()).collect();
-        task_vec.sort_by_key(|a| a.title.clone());
+        task_vec.sort_by_key(|a| a.title.clone().to_lowercase());
         task_vec.sort_by_key(|a| a.completed);
 
         task_vec

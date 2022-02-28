@@ -13,6 +13,41 @@
     border-width: 1px;
 }
 
+.mainPage {
+    background: blue;
+    color: #fff;
+    height: 5vh;
+    width: 5vh;
+    border: none;
+    border-radius: 100%;
+    font-family: 'Inter';
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.paginator {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.switchPage {
+    background: #ffffff;
+    width: 5vh;
+    height: 5vh;
+    margin: 20px;
+    color: #aaa;
+    border-radius: 100%;
+    border-color: #eaeaea;
+    border-width: 1px;
+    border-style: solid;
+    font-family: 'Inter';
+    font-weight: 700;
+}
+
 .addTaskButton {
     /* #0b75f9 */
     background: blue;

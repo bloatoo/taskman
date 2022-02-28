@@ -21,6 +21,7 @@ const default_state: State = {
 const TaskList: React.FC = () => {
   let [state, setState] = useState<State>(default_state);
   let [tasks, setTasks] = useState<ITask[]>([]);
+  let [page, setPage] = useState(0);
 
   let getTasks = async() => {
     let res = await fetch("http://localhost:8080/api/tasks");
@@ -74,7 +75,7 @@ const TaskList: React.FC = () => {
   }, []);
 
   let task_array = tasks
-    .slice(state.start_idx, state.start_idx + 4)
+    .slice(page * 4 + state.start_idx, page * 4 + 4)
     .map(elem =>
       <Task
         onComplete={() => completeTask(elem)}
@@ -112,6 +113,11 @@ const TaskList: React.FC = () => {
             }}>
               Add Task
             </button>
+          </div>
+          <div className={styles.paginator}>
+            <button className={styles.switchPage} onClick={() => setPage(page - 1)}>{ "<" }</button>
+            <button className={styles.mainPage} onClick={() => setPage(page + 1)}>{page + 1}</button>
+            <button className={styles.switchPage} onClick={() => setPage(page + 1)}>{ ">" }</button>
           </div>
       </div>
     )
