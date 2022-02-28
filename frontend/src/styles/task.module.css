@@ -47,9 +47,3 @@
     transition: ease-in;
     transition-duration: 100ms;
 }
-
-.completionState:hover {
-    text-decoration: underline;
-    cursor: pointer;
-    color: #0b75f9;
-}

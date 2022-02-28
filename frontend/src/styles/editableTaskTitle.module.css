@@ -6,6 +6,10 @@
     font-weight: 700;
 }
 
+.uncompleted:hover {
+    cursor: pointer;
+}
+
 .completed {
     font-family: 'Inter';
     font-size: 32px;
@@ -15,11 +19,18 @@
     font-weight: 700;
 }
 
+.completed:hover {
+    cursor: pointer;
+}
+
 .titleEditor {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 100%;
+}
+
+.titleEditor:hover {
 }
 
 .cancelButton {

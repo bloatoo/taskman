@@ -8,7 +8,6 @@ const Main: React.FC = () => {
       <Navbar />
       <div className={styles.mainContainer}>
         <div className={styles.placeholder}>
-          <h1 className={styles.title}>Get to WORK!</h1>
         </div>
         <TaskList />
       </div>

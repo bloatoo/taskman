@@ -105,8 +105,9 @@ const TaskList: React.FC = () => {
     )
   } else {
     let pageArray = [];
+    let len = tasks.length / 4;
 
-    for(let i = 0; i < Math.floor(tasks.length % 4 == 0 ? tasks.length / 4 : (tasks.length / 4) + 1); i++) {
+    for(let i = 0; i < Math.floor(tasks.length % 4 == 0 ? len : len + 1); i++) {
       let name = i == page ? styles.currentPageIndicator : styles.pageIndicator;
       pageArray.push(<button key={i} onClick={() => setPage(i)} className={name}>{ i + 1 }</button>);
     }
@@ -124,6 +125,7 @@ const TaskList: React.FC = () => {
 
             <button className={styles.addTaskButton} onClick={() => {
               submitTask(state.new_task_title).then(task => {
+                task.created_at_time = task.created_at_time.split(".")[0];
                 setTasks([...tasks, task])
               });
             }}>

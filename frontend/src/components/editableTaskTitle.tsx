@@ -28,7 +28,10 @@ const EditableTaskTitle: React.FC<Props> = ({ text, completed, onRename }) => {
     </div> 
     :
       completed ?
-        <h1 className={styles.completed} onClick={() => setState(true)}>{ name }</h1>
+      <h1 className={styles.completed} onClick={(e) => {
+        e.stopPropagation();
+        setState(true)
+      }}>{ name }</h1>
       :
         <h1 className={styles.uncompleted} onClick={() => setState(true)}>{ name }</h1>
 } 
