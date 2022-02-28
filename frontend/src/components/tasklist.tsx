@@ -56,13 +56,14 @@ const TaskList: React.FC = () => {
     delete tasks[idx!];
     task.completed = !task.completed;
 
+    let new_tasks = tasks.filter(x => x != null);
     switch(task.completed) {
       case true: {
-        setTasks([...tasks.filter(x => x != null), task]);
+        setTasks([...new_tasks.slice(0, idx), task, ...new_tasks.slice(idx, new_tasks.length)]);
         break;
       }
       case false: {
-        setTasks([task, ...tasks.filter(x => x != null)])
+        setTasks([...new_tasks.slice(0, idx), task, ...new_tasks.slice(idx, new_tasks.length)]);
         break;
       }
     }

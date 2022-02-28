@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 pub mod database;
 
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Eq, Ord)]
 pub struct Task {
     id: i32,
     title: String,

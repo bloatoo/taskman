@@ -91,7 +91,11 @@ impl Database {
             .await
             .expect("Error while reading tasks from database");
 
-        rows.iter().map(|x| Task::from_row(x).unwrap()).collect()
+        let mut task_vec: Vec<Task> = rows.iter().map(|x| Task::from_row(x).unwrap()).collect();
+        task_vec.sort_by_key(|a| a.title.clone());
+        task_vec.sort_by_key(|a| a.completed);
+
+        task_vec
     }
 
     pub async fn get_task(&self, id: i32) -> Option<Task> {
