@@ -1,3 +1,4 @@
+/// FIXME: the task names get shifted
 import { Task as ITask } from '../interfaces';
 import Task from './task';
 import styles from '../styles/tasklist.module.css';
@@ -11,6 +12,16 @@ interface State {
 const default_state: State = {
   new_task_title: "",
   loaded: false,
+}
+
+interface Props {
+  str: ITask;
+}
+
+const Ta: React.FC<Props> = ({ str }) => {
+  return (
+    <h1>{ str.title }</h1>
+  )
 }
 
 const TaskList: React.FC = () => {
@@ -42,6 +53,8 @@ const TaskList: React.FC = () => {
     return json;
   }
 
+  console.log(tasks);
+
   let completeTask = async(task: ITask) => {
     await fetch("http://localhost:8080/api/complete_task", {
       method: 'POST',
@@ -66,8 +79,11 @@ const TaskList: React.FC = () => {
       headers: { 'Content-Type': 'application/json' },
     });
 
-    setTasks(tasks.filter(x => x.id !== task.id));
+    let newTasks = tasks.filter(x => x.id !== task.id);
+    setTasks(newTasks);
   }
+
+  let renameTask = async(task: ITask) => {}
 
   useEffect(() => {
     getTasks();
@@ -80,17 +96,6 @@ const TaskList: React.FC = () => {
       setPage(prev => prev - 1);
     }
   }, [tasks])
-
-  let taskArray = tasks
-    .slice(page * 4, page * 4 + 4)
-    .map(elem =>
-      <Task
-        onComplete={() => completeTask(elem)}
-        onDelete={() => deleteTask(elem)}
-        key={tasks.indexOf(elem)}
-        core={elem} 
-      />
-    )
 
   if(!state.loaded) { 
     return (
@@ -105,10 +110,19 @@ const TaskList: React.FC = () => {
     }
     return (
       <div className={styles.taskList}>
-        { taskArray.length === 0 ?
+        { tasks.length === 0 ?
           <div className={styles.noTasksText}>You have no tasks.</div>
             :
-          taskArray
+            tasks
+            .slice(page * 4, page * 4 + 4)
+            .map(elem =>
+              <Task
+                onComplete={() => completeTask(elem)}
+                onDelete={() => deleteTask(elem)}
+                key={tasks.indexOf(elem)}
+                core={elem} 
+              />
+              )
         }
           <div className={styles.newTask}>
             <input className={styles.taskTitleInput} type="text" value={state.new_task_title} onChange={(event) => {
@@ -118,7 +132,7 @@ const TaskList: React.FC = () => {
             <button className={styles.addTaskButton} onClick={() => {
               submitTask(state.new_task_title).then(task => {
                 task.created_at_time = task.created_at_time.split(".")[0];
-                setTasks([...tasks, task])
+                setTasks([task, ...tasks])
               });
             }}>
               Add Task

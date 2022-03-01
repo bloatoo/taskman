@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../styles/editableTaskTitle.module.css';
 
 interface Props {
@@ -10,6 +10,10 @@ interface Props {
 const EditableTaskTitle: React.FC<Props> = ({ text, completed, onRename }) => {
   let [state, setState] = useState(false);
   let [name, setName] = useState(text);
+
+  useEffect(() => {
+    setName(text);
+  }, [text])
 
   return state ?
     <div className={styles.titleEditor}>
@@ -23,8 +27,8 @@ const EditableTaskTitle: React.FC<Props> = ({ text, completed, onRename }) => {
         className={styles.nameInput}
         type="text"
       />
-      { /* <button className={styles.saveButton}>Save</button>
-      <button onClick={() => setName(name)} className={styles.cancelButton}>Cancel</button> */ }
+      {
+      <button onClick={() => setName(name)} className={styles.cancelButton}>Cancel</button> }
     </div> 
     :
       completed ?
@@ -34,6 +38,6 @@ const EditableTaskTitle: React.FC<Props> = ({ text, completed, onRename }) => {
       }}>{ name }</h1>
       :
         <h1 className={styles.uncompleted} onClick={() => setState(true)}>{ name }</h1>
-} 
+}
 
 export default EditableTaskTitle;
