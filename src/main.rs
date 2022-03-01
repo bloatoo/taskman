@@ -115,7 +115,7 @@ async fn rename_task(
 #[serde(rename_all = "camelCase")]
 pub struct NewTaskRequest {
     pub title: String,
-    pub deadline_timestamp: Option<String>,
+    pub deadline: Option<String>,
 }
 
 async fn new_task(
@@ -124,9 +124,7 @@ async fn new_task(
 ) -> anyhow::Result<impl Reply, Rejection> {
     let state_lock = state.lock().await;
 
-    println!("{:#?}", body.deadline_timestamp);
-
-    let item = InsertableItem::Task(body.title);
+    let item = InsertableItem::Task(body.title, body.deadline);
 
     match state_lock.db.insert_item(item).await {
         Ok(id) => {

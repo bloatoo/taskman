@@ -8,7 +8,8 @@ const DEFAULT_TASK_ARRAY: ITask[] = [{
   title: "",
   createdAt: "2020-12-31T10:00:00.1555",
   completed: true,
-  id: 9999
+  id: 9999,
+  deadline: null
 }]
 
 const TaskList: React.FC = () => {
@@ -45,6 +46,7 @@ const TaskList: React.FC = () => {
     });
 
     let arrTask = tasks.find(a => a.id === task.id);
+    console.log(arrTask);
     let idx = tasks.indexOf(arrTask!);
     delete tasks[idx!];
     task.completed = !task.completed;
@@ -157,7 +159,7 @@ const TaskList: React.FC = () => {
         <button className={styles.addTaskButton} onClick={() => {
           let newTask: NewTask = {
             title: title,
-            deadlineTimestamp: `${deadlineDate}T${deadlineTime}`
+            deadline: `${deadlineDate} ${deadlineTime}`
           }
 
           let valid = validateAndFix(newTask);
@@ -187,8 +189,8 @@ function validateAndFix(task: NewTask): NewTask | null {
     return null;
   }
 
-  if(task.deadlineTimestamp !== null) {
-    let [date, time] = task.deadlineTimestamp.split("T");
+  if(task.deadline !== null) {
+    let [date, time] = task.deadline.split(" ");
 
     if(time != "" && !/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(time)) {
       return null;
@@ -204,13 +206,13 @@ function validateAndFix(task: NewTask): NewTask | null {
 
     return {
       title: task.title,
-      deadlineTimestamp: [date, time].join("T")
+      deadline: [date, time].join(" ")
     }
   }
 
   return {
     title: task.title,
-    deadlineTimestamp: null
+    deadline: null
   }
 }
 

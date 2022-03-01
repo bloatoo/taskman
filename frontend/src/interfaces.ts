@@ -3,9 +3,10 @@ export interface Task {
   completed: boolean,
   id: number,
   createdAt: string;
+  deadline: string | null;
 }
 
 export interface NewTask {
   title: string;
-  deadlineTimestamp: string | null;
+  deadline: string | null;
 }

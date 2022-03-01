@@ -9,10 +9,10 @@ interface Props {
 }
 
 const Task: React.FC<Props> = ({ core, onComplete, onDelete }) => {
-  let onRename = async(new_title: string) => {
+  let onRename = async(newTitle: string) => {
     await fetch("http://localhost:8080/api/rename_task", {
       method: 'POST',
-      body: JSON.stringify({ id: core.id, newTitle: new_title }),
+      body: JSON.stringify({ id: core.id, newTitle: newTitle }),
       headers: { 'Content-Type': 'application/json' }
     })
   }
@@ -25,8 +25,13 @@ const Task: React.FC<Props> = ({ core, onComplete, onDelete }) => {
           completed={core.completed}
           onRename={onRename}
         />
-        <p className={styles.completionState}>
-        </p>
+        { core.deadline ? 
+          <p className={styles.completionState}>
+            { core.deadline }
+          </p>
+          : 
+          null
+        }
       </div>
       <div onClick={(e) => e.stopPropagation()} className={styles.buttonContainer}>
         <button onClick={(e) => {

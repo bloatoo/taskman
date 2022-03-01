@@ -1,5 +1,6 @@
 use crate::Task;
 use anyhow::Context;
+use chrono::NaiveDateTime;
 use rand::Rng;
 use tokio_postgres::{connect, Client as PSQClient, NoTls};
 
@@ -8,7 +9,7 @@ pub struct Database {
 }
 
 pub enum InsertableItem {
-    Task(String),
+    Task(String, Option<String>),
     Habit(String),
 }
 
@@ -42,7 +43,7 @@ impl Database {
         });
 
         // Check if the required tables exist and create them if they don't exist
-        let _ = client.execute("CREATE TABLE IF NOT EXISTS tasks(id INTEGER PRIMARY KEY, title TEXT NOT NULL, completed BOOL NOT NULL);", &[]).await?;
+        let _ = client.execute("CREATE TABLE IF NOT EXISTS tasks(id INTEGER PRIMARY KEY, title TEXT NOT NULL, completed BOOL NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, deadline TIMESTAMP);", &[]).await?;
         let _ = client.execute("CREATE TABLE IF NOT EXISTS habits(id INTEGER PRIMARY KEY, title TEXT NOT NULL, day INTEGER NOT NULL, last_completed DATE);", &[]).await?;
 
         Ok(Self { client })
@@ -52,21 +53,35 @@ impl Database {
         let id = self.generate_id(&item).await;
 
         match item {
-            InsertableItem::Task(title) => {
-                self.client
+            InsertableItem::Task(ref title, ref deadline) => match deadline {
+                Some(s) => {
+                    let timestamp = NaiveDateTime::parse_from_str(s, "%Y-%m-%d %H:%M").unwrap();
+
+                    self.client
                     .execute(
-                        "INSERT INTO tasks(id, title, completed) VALUES($1, $2, $3)",
-                        &[&id, &title, &false],
+                        "INSERT INTO tasks(id, title, completed, deadline) VALUES($1, $2, $3, $4)",
+                        &[&id, &title, &false, &timestamp],
                     )
                     .await
-                    .context("Failed inserting task into database")?;
-            }
+                    .expect("Failed inserting task into database");
+                }
+
+                None => {
+                    self.client
+                        .execute(
+                            "INSERT INTO tasks(id, title, completed) VALUES($1, $2, $3)",
+                            &[&id, &title, &false],
+                        )
+                        .await
+                        .context("Failed inserting task into database")?;
+                }
+            },
 
             InsertableItem::Habit(title) => {
                 self.client
                     .execute(
                         "INSERT INTO habits(id, title, day) VALUES($1, $2, $3)",
-                        &[&id, &title, &1],
+                        &[&id, &title, &1i32],
                     )
                     .await
                     .context("Failed inserting task into database")?;
@@ -80,7 +95,7 @@ impl Database {
         let mut id: i32 = rand::thread_rng().gen_range(0..1000);
 
         let query_str = match item {
-            InsertableItem::Task(_) => "SELECT id FROM tasks WHERE id = $1",
+            InsertableItem::Task(_, _) => "SELECT id FROM tasks WHERE id = $1",
             InsertableItem::Habit(_) => "SELECT id FROM habits WHERE id = $1",
         };
 
@@ -131,7 +146,10 @@ impl Database {
     pub async fn get_tasks(&self) -> Vec<Task> {
         let rows = self
             .client
-            .query("SELECT id, title, completed, created_at FROM tasks;", &[])
+            .query(
+                "SELECT id, title, completed, created_at, deadline FROM tasks;",
+                &[],
+            )
             .await
             .expect("Error while reading tasks from database");
 

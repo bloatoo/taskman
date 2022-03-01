@@ -9,6 +9,7 @@ pub struct Task {
     title: String,
     completed: bool,
     created_at: NaiveDateTime,
+    deadline: Option<NaiveDateTime>,
 }
 
 impl Task {
@@ -17,12 +18,14 @@ impl Task {
         let title: String = row.try_get("title")?;
         let completed: bool = row.try_get("completed")?;
         let created_at: NaiveDateTime = row.try_get("created_at")?;
+        let deadline: Option<NaiveDateTime> = row.try_get("deadline")?;
 
         Ok(Self {
             id,
             title,
             completed,
             created_at,
+            deadline,
         })
     }
 
