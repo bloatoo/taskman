@@ -159,7 +159,7 @@
     text-align: center;
 }
 
-.hourPicker {
+.timePicker {
     background: var(--inputBackground);
     border-color: var(--border);
     color: var(--foreground);

@@ -152,7 +152,7 @@ const TaskList: React.FC = () => {
             onChange={(e) => setDeadlineDate(e.target.value)}
             placeholder="Deadline date"
             type="text" />
-          <input className={styles.hourPicker} onChange={(e) => setDeadlineTime(e.target.value)} type="text" />
+          <input className={styles.timePicker} placeholder="Deadline time" onChange={(e) => setDeadlineTime(e.target.value)} type="text" />
         </div>
         <button className={styles.addTaskButton} onClick={() => {
           let newTask: NewTask = {
