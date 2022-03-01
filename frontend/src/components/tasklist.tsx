@@ -105,13 +105,11 @@ const TaskList: React.FC = () => {
               />
               )
         }
-          <div className={styles.newTask}>
-            <button className={styles.addTaskButton} onClick={() => {
-               setIsNewTask(true);
-            }}>
-              Add Task
-            </button>
-          </div>
+          <button className={styles.addTaskButton} onClick={() => {
+             setIsNewTask(true);
+          }}>
+            Add Task
+          </button>
 
           { nPages > 1 ?
           <div className={styles.paginator}>
@@ -138,15 +136,15 @@ const TaskList: React.FC = () => {
     let [title, setTitle] = useState("");
 
     return (
-      <div>
-        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
-        <button onClick={() => {
+      <div className={styles.newTaskView}>
+        <input className={styles.taskTitleInput} placeholder="Task title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <button className={styles.addTaskButton} onClick={() => {
           setIsNewTask(false);
           submitTask(title, null).then(newTask => {
             setTasks([newTask, ...tasks])
             setTitle("");
           })
-        }}>Add it</button>
+        }}>Add Task</button>
       </div>
     )
   }

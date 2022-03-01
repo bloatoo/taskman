@@ -90,6 +90,7 @@
     border-radius: 15px;
     transition: ease-in;
     transition-duration: 100ms;
+    margin: 10px;
 }
 
 .addTaskButton:hover {
@@ -97,17 +98,16 @@
     cursor: pointer;
 }
 
-.newTask {
+.newTaskView {
     display: flex;
-    flex-direction: row;
-    width: 100%;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 3vh;
-}
-
-.newTask * {
-    margin: 10px;
+    width: 50%;
+    background: var(--taskListBackground);
+    border-left-style: solid;
+    border-color: var(--border);
+    border-width: 1px;
 }
 
 .taskTitleInput {

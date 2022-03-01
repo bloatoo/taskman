@@ -29,11 +29,7 @@ async fn main() {
 
     let state = Arc::new(Mutex::new(State { db }));
 
-    std::thread::spawn(move || {
-        web_server(state);
-    });
-
-    loop {}
+    web_server(state).await;
 }
 
 async fn get_task(id: i32, state: Arc<Mutex<State>>) -> anyhow::Result<impl Reply, Rejection> {
@@ -142,7 +138,6 @@ async fn new_task(
     }
 }
 
-#[tokio::main]
 async fn web_server(state: Arc<Mutex<State>>) {
     let state = warp::any().map(move || state.clone());
 
