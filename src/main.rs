@@ -66,6 +66,7 @@ async fn delete_task(
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CompleteTaskRequest {
     pub completion_state: bool,
     pub id: i32,
@@ -86,6 +87,7 @@ async fn complete_task(
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RenameTaskRequest {
     id: i32,
     new_title: String,
@@ -110,8 +112,10 @@ async fn rename_task(
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct NewTaskRequest {
     pub title: String,
+    pub deadline_timestamp: Option<String>,
 }
 
 async fn new_task(
@@ -119,6 +123,8 @@ async fn new_task(
     state: Arc<Mutex<State>>,
 ) -> anyhow::Result<impl Reply, Rejection> {
     let state_lock = state.lock().await;
+
+    println!("{:#?}", body.deadline_timestamp);
 
     let item = InsertableItem::Task(body.title);
 

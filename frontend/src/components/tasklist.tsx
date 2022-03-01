@@ -1,11 +1,12 @@
-import { Task as ITask } from '../interfaces';
+import { Task as ITask, NewTask } from '../interfaces';
 import Task from './task';
 import styles from '../styles/tasklist.module.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { getDate } from '../dateUtils';
 
 const DEFAULT_TASK_ARRAY: ITask[] = [{
   title: "",
-  created_at: "2020-12-31T10:00:00.1555",
+  createdAt: "2020-12-31T10:00:00.1555",
   completed: true,
   id: 9999
 }]
@@ -24,11 +25,11 @@ const TaskList: React.FC = () => {
     setTasks(tasks);
   }
 
-  let submitTask = async(title: string, deadline: string | null) => {
+  let submitTask = async(task: NewTask) => {
     let res = await fetch("http://localhost:8080/api/new_task", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: title }),
+      body: JSON.stringify(task),
     });
 
     let json: ITask = await res.json();
@@ -39,18 +40,18 @@ const TaskList: React.FC = () => {
   let completeTask = async(task: ITask) => {
     await fetch("http://localhost:8080/api/complete_task", {
       method: 'POST',
-      body: JSON.stringify({ id: task.id, completion_state: !task.completed }),
+      body: JSON.stringify({ id: task.id, completionState: !task.completed }),
       headers: { 'Content-Type': 'application/json' }
     });
 
-    let arr_task = tasks.find(a => a.id === task.id);
-    let idx = tasks.indexOf(arr_task!);
+    let arrTask = tasks.find(a => a.id === task.id);
+    let idx = tasks.indexOf(arrTask!);
     delete tasks[idx!];
     task.completed = !task.completed;
 
-    let new_tasks = tasks.filter(x => x != null);
+    let newTasks = tasks.filter(x => x != null);
 
-    setTasks([...new_tasks.slice(0, idx), task, ...new_tasks.slice(idx, new_tasks.length)]);
+    setTasks([...newTasks.slice(0, idx), task, ...newTasks.slice(idx, newTasks.length)]);
   }
 
   let deleteTask = async(task: ITask) => {
@@ -133,23 +134,84 @@ const TaskList: React.FC = () => {
   }
 
   let NewTaskView: React.FC = () => {
+    let ref = useRef<any>();
     let [title, setTitle] = useState("");
+    let [deadlineDate, setDeadlineDate] = useState("");
+    let [deadlineTime, setDeadlineTime] = useState("");
 
     return (
       <div className={styles.newTaskView}>
+        <h1 className={styles.noTasksText}>Add New Task</h1>
         <input className={styles.taskTitleInput} placeholder="Task title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <div className={styles.dateTimePicker}>
+          <input
+            className={styles.datePicker}
+            ref={ref}
+            onFocus={() => (ref.current.type = "date")}
+            onBlur={() => (ref.current.type = "text")}
+            onChange={(e) => setDeadlineDate(e.target.value)}
+            placeholder="Deadline date"
+            type="text" />
+          <input className={styles.hourPicker} onChange={(e) => setDeadlineTime(e.target.value)} type="text" />
+        </div>
         <button className={styles.addTaskButton} onClick={() => {
-          setIsNewTask(false);
-          submitTask(title, null).then(newTask => {
-            setTasks([newTask, ...tasks])
-            setTitle("");
-          })
+          let newTask: NewTask = {
+            title: title,
+            deadlineTimestamp: `${deadlineDate}T${deadlineTime}`
+          }
+
+          let valid = validateAndFix(newTask);
+
+          if(valid !== null) {
+            setIsNewTask(false);
+            submitTask(valid).then(newTask => {
+              setTasks([newTask, ...tasks])
+              setTitle("");
+            })
+          }
         }}>Add Task</button>
+
+        <button className={styles.cancelAddingTaskButton} onClick={() => {
+          setIsNewTask(false);
+          setTitle("");
+        }}>Cancel</button>
       </div>
     )
   }
 
   return isNewTask ? <NewTaskView /> : <TaskListInner />
+}
+
+function validateAndFix(task: NewTask): NewTask | null {
+  if(task.title === "") {
+    return null;
+  }
+
+  if(task.deadlineTimestamp !== null) {
+    let [date, time] = task.deadlineTimestamp.split("T");
+
+    if(time != "" && !/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(time)) {
+      return null;
+    }
+
+    if(date == "") {
+      if(time != "") {
+        date = getDate(new Date().toISOString());
+      }
+    } else {
+      time = "23:59";
+    }
+
+    return {
+      title: task.title,
+      deadlineTimestamp: [date, time].join("T")
+    }
+  }
+
+  return {
+    title: task.title,
+    deadlineTimestamp: null
+  }
 }
 
 export default TaskList;

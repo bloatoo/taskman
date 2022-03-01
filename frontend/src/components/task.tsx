@@ -1,7 +1,6 @@
 import { Task as ITask } from '../interfaces';
 import styles from '../styles/task.module.css';
 import EditableTaskTitle from './editableTaskTitle';
-import { formatDate, formatTimeHm, getTime, getDate } from '../dateUtils';
 
 interface Props {
   core: ITask
@@ -13,12 +12,10 @@ const Task: React.FC<Props> = ({ core, onComplete, onDelete }) => {
   let onRename = async(new_title: string) => {
     await fetch("http://localhost:8080/api/rename_task", {
       method: 'POST',
-      body: JSON.stringify({ id: core.id, new_title: new_title }),
+      body: JSON.stringify({ id: core.id, newTitle: new_title }),
       headers: { 'Content-Type': 'application/json' }
     })
   }
-
-  let time = formatTimeHm(getTime(core.created_at));
 
   return (
     <div onClick={onComplete} className={styles.task}>

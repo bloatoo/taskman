@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 pub mod database;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct Task {
     id: i32,
     title: String,

@@ -98,6 +98,21 @@
     cursor: pointer;
 }
 
+.cancelAddingTaskButton {
+    font-family: 'Inter';
+    color: var(--lightForeground);
+    border: none;
+    background: var(--taskListBackground);
+    margin: 1vh;
+    transition: ease-in;
+    transition-duration: 100ms;
+}
+
+.cancelAddingTaskButton:hover {
+    color: var(--foreground);
+    cursor: pointer;
+}
+
 .newTaskView {
     display: flex;
     flex-direction: column;
@@ -118,10 +133,57 @@
     border-style: solid;
     border-radius: 20px;
     padding: 10px;
+    padding-left: 20px;
+    width: 250px;
     height: 28px;
     font-family: 'Inter';
     font-weight: 400;
     font-size: 15px;
+    margin-top: 3vh;
+    margin-bottom: 0;
+}
+
+.datePicker {
+    background: var(--inputBackground);
+    border-color: var(--border);
+    color: var(--foreground);
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 20px 0px 0px 20px;
+    padding: 10px;
+    height: 28px !important;
+    width: 120px !important;
+    font-family: 'Inter';
+    font-weight: 400;
+    font-size: 15px !important;
+    text-align: center;
+}
+
+.hourPicker {
+    background: var(--inputBackground);
+    border-color: var(--border);
+    color: var(--foreground);
+    border-width: 1px;
+    border-style: solid solid solid none;
+    border-radius: 0 20px 20px 0px;
+    padding: 10px;
+    height: 28px;
+    width: 120px !important;
+    font-family: 'Inter';
+    font-weight: 400;
+    font-size: 15px;
+    display: flex;
+    text-align: center;
+}
+
+.dateTimePicker {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 1vh;
+    margin-bottom: 2vh;
 }
 
 .noTasksText {
@@ -130,4 +192,11 @@
     font-size: 50px;
     margin: 20px;
     color: var(--foreground);
+}
+
+.datePicker {
+    display: block;
+    background: #fff;
+    height: 5vh;
+    width: 5vh;
 }
