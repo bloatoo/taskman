@@ -1,7 +1,7 @@
 import { Task as ITask } from '../interfaces';
 import styles from '../styles/task.module.css';
 import EditableTaskTitle from './editableTaskTitle';
-import { isToday, formatTimeHm } from '../dateUtils';
+import { formatDate, formatTimeHm } from '../dateUtils';
 
 interface Props {
   core: ITask
@@ -19,7 +19,6 @@ const Task: React.FC<Props> = ({ core, onComplete, onDelete }) => {
   }
 
   let time = formatTimeHm(core.created_at_time);
-  let dateString = isToday(core.created_at_date) ? `Today at ${time}` : `On ${core.created_at_date.replace("-", "/")} at ${time}`;
 
   return (
     <div onClick={onComplete} className={styles.task}>
@@ -29,7 +28,7 @@ const Task: React.FC<Props> = ({ core, onComplete, onDelete }) => {
           completed={core.completed}
           onRename={onRename}
         />
-        <p className={styles.completionState}>{dateString}</p>
+        <p className={styles.completionState}>{ `${formatDate(core.created_at_date)} at ${time} ` }</p>
       </div>
       <div onClick={(e) => e.stopPropagation()} className={styles.buttonContainer}>
         <button onClick={() => onDelete()} className={styles.deleteButton}>🞩</button>
