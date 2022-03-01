@@ -29,7 +29,6 @@ const Task: React.FC<Props> = ({ core, onComplete, onDelete }) => {
           onRename={onRename}
         />
         <p className={styles.completionState}>
-          { `${formatDate(getDate(core.created_at))} at ${time}` }
         </p>
       </div>
       <div onClick={(e) => e.stopPropagation()} className={styles.buttonContainer}>

@@ -10,13 +10,13 @@ const setVar = (key: string, value: string) => {
 
 const switchColors = (darkMode: boolean) => {
   if(darkMode) {
-    setVar('--background', '#141414');
+    setVar('--background', '#161616');
     setVar('--inputBackground', '#191919');
     setVar('--placeholder', '#999');
     setVar('--foreground', '#fff');
     setVar('--lightForeground', '#aaa');
     setVar('--inverseForeground', '#fff');
-    setVar('--taskListBackground', '#121212');
+    setVar('--taskListBackground', '#141414');
     setVar('--border', '#181818');
     setVar('--hoverBackground', '#181818');
     setVar('--buttonBackground', 'orange');
