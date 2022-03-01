@@ -6,7 +6,7 @@ use warp::hyper::header;
 use warp::hyper::Method;
 use warp::{Filter, Rejection, Reply};
 
-use taskman::database::Database;
+use taskman::database::{Database, InsertableItem};
 
 pub struct State {
     db: Database,
@@ -124,7 +124,9 @@ async fn new_task(
 ) -> anyhow::Result<impl Reply, Rejection> {
     let state_lock = state.lock().await;
 
-    match state_lock.db.insert_task(body.title).await {
+    let item = InsertableItem::Task(body.title);
+
+    match state_lock.db.insert_item(item).await {
         Ok(id) => {
             let task = state_lock.db.get_task(id).await.unwrap();
 

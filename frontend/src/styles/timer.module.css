@@ -30,7 +30,8 @@
 }
 
 .startButton:hover {
-    background: var(--buttonBackground);
+    background: var(--buttonHoverBackground);
+    cursor: pointer;
 }
 
 .pauseButton {
@@ -46,6 +47,13 @@
     margin: 2vh;
     margin-right: 20px;
     font-size: 15px;
+    transition: ease-in;
+    transition-duration: 100ms;
+}
+
+.pauseButton:hover {
+    background: var(--buttonHoverBackground);
+    cursor: pointer;
 }
 
 .resetButton {
@@ -62,8 +70,14 @@
     margin: 2vh;
     margin-left: 20px;
     font-size: 15px;
+    transition: ease-in;
+    transition-duration: 100ms;
 }
 
+.resetButton:hover {
+    background: var(--taskListBackground);
+    cursor: pointer;
+}
 .buttons {
     display: flex;
     flex-direction: row;

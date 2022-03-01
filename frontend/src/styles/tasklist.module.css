@@ -88,6 +88,13 @@
     width: 20%;
     border: none;
     border-radius: 15px;
+    transition: ease-in;
+    transition-duration: 100ms;
+}
+
+.addTaskButton:hover {
+    background: var(--buttonHoverBackground);
+    cursor: pointer;
 }
 
 .newTask {
@@ -122,4 +129,5 @@
     font-weight: 700;
     font-size: 50px;
     margin: 20px;
+    color: var(--foreground);
 }

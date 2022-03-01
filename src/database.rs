@@ -7,6 +7,16 @@ pub struct Database {
     client: PSQClient,
 }
 
+pub enum InsertableItem {
+    Task(String),
+    Habit(String),
+}
+
+pub enum QueryableItem<T: Into<i32>> {
+    Task(T),
+    Habit(T),
+}
+
 impl Database {
     pub async fn connect<T: AsRef<str>>(
         db_user: T,
@@ -33,16 +43,50 @@ impl Database {
 
         // Check if the required tables exist and create them if they don't exist
         let _ = client.execute("CREATE TABLE IF NOT EXISTS tasks(id INTEGER PRIMARY KEY, title TEXT NOT NULL, completed BOOL NOT NULL);", &[]).await?;
+        let _ = client.execute("CREATE TABLE IF NOT EXISTS habits(id INTEGER PRIMARY KEY, title TEXT NOT NULL, day INTEGER NOT NULL, last_completed DATE);", &[]).await?;
 
         Ok(Self { client })
     }
 
-    pub async fn insert_task(&self, title: String) -> anyhow::Result<i32> {
+    pub async fn insert_item(&self, item: InsertableItem) -> anyhow::Result<i32> {
+        let id = self.generate_id(&item).await;
+
+        match item {
+            InsertableItem::Task(title) => {
+                self.client
+                    .execute(
+                        "INSERT INTO tasks(id, title, completed) VALUES($1, $2, $3)",
+                        &[&id, &title, &false],
+                    )
+                    .await
+                    .context("Failed inserting task into database")?;
+            }
+
+            InsertableItem::Habit(title) => {
+                self.client
+                    .execute(
+                        "INSERT INTO habits(id, title, day) VALUES($1, $2, $3)",
+                        &[&id, &title, &1],
+                    )
+                    .await
+                    .context("Failed inserting task into database")?;
+            }
+        }
+
+        Ok(id)
+    }
+
+    async fn generate_id(&self, item: &InsertableItem) -> i32 {
         let mut id: i32 = rand::thread_rng().gen_range(0..1000);
+
+        let table_name = match item {
+            InsertableItem::Task(_) => "tasks",
+            InsertableItem::Habit(_) => "habits",
+        };
 
         while self
             .client
-            .query("SELECT id FROM tasks where id = $1", &[&id])
+            .query("SELECT id FROM $1 where id = $2", &[&table_name, &id])
             .await
             .expect("Failed reading from database")
             .len()
@@ -51,15 +95,7 @@ impl Database {
             id = rand::thread_rng().gen_range(0..1000);
         }
 
-        self.client
-            .execute(
-                "INSERT INTO tasks(id, title, completed) VALUES($1, $2, $3)",
-                &[&id, &title, &false],
-            )
-            .await
-            .context("Failed inserting task into database")?;
-
-        Ok(id)
+        id
     }
 
     pub async fn delete_task(&self, id: i32) -> anyhow::Result<()> {
@@ -103,7 +139,10 @@ impl Database {
             .expect("Error while reading tasks from database");
 
         let mut task_vec: Vec<Task> = rows.iter().map(|x| Task::from_row(x).unwrap()).collect();
-        task_vec.sort_by_key(|a| a.title.clone().to_lowercase());
+
+        task_vec.sort_by_key(|a| a.created_at_time);
+        task_vec.sort_by_key(|a| a.created_at_date);
+        task_vec.reverse();
         task_vec.sort_by_key(|a| a.completed);
 
         task_vec
