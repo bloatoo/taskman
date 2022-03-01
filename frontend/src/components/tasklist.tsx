@@ -3,31 +3,28 @@ import Task from './task';
 import styles from '../styles/tasklist.module.css';
 import { useState, useEffect } from 'react';
 
-interface State {
-  loaded: boolean,
-  new_task_title: string
-}
-
-const default_state: State = {
-  new_task_title: "",
-  loaded: false,
-}
+const DEFAULT_TASK_ARRAY: ITask[] = [{
+  title: "",
+  created_at: "2020-12-31T10:00:00.1555",
+  completed: true,
+  id: 9999
+}]
 
 const TaskList: React.FC = () => {
-  let [state, setState] = useState<State>(default_state);
-  let [tasks, setTasks] = useState<ITask[]>([]);
+  let [tasks, setTasks] = useState<ITask[]>(DEFAULT_TASK_ARRAY);
+
   let [page, setPage] = useState(0);
+  let [isNewTask, setIsNewTask] = useState(false);
 
   let getTasks = async() => {
     let res = await fetch("http://localhost:8080/api/tasks");
     let tasks: ITask[] = await res.json();
     console.log(tasks);
 
-    setState({ ...state, loaded: true });
     setTasks(tasks);
   }
 
-  let submitTask = async(title: string) => {
+  let submitTask = async(title: string, deadline: string | null) => {
     let res = await fetch("http://localhost:8080/api/new_task", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -35,8 +32,6 @@ const TaskList: React.FC = () => {
     });
 
     let json: ITask = await res.json();
-
-    setState({ ...state, new_task_title: "" });
 
     return json;
   }
@@ -81,7 +76,9 @@ const TaskList: React.FC = () => {
     }
   }, [tasks])
 
-  if(!state.loaded) { 
+  let TaskListInner: React.FC = () => {
+
+  if(tasks == DEFAULT_TASK_ARRAY) { 
     return (
       <div>Loading...</div>
     )
@@ -109,14 +106,8 @@ const TaskList: React.FC = () => {
               )
         }
           <div className={styles.newTask}>
-            <input className={styles.taskTitleInput} type="text" value={state.new_task_title} onChange={(event) => {
-              setState({ ...state, new_task_title: event.target.value });
-            }} placeholder="Task title" />
-
             <button className={styles.addTaskButton} onClick={() => {
-              submitTask(state.new_task_title).then(task => {
-                setTasks([task, ...tasks])
-              });
+               setIsNewTask(true);
             }}>
               Add Task
             </button>
@@ -139,8 +130,28 @@ const TaskList: React.FC = () => {
           </div>
           : null }
       </div>
+      )
+    }
+  }
+
+  let NewTaskView: React.FC = () => {
+    let [title, setTitle] = useState("");
+
+    return (
+      <div>
+        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <button onClick={() => {
+          setIsNewTask(false);
+          submitTask(title, null).then(newTask => {
+            setTasks([newTask, ...tasks])
+            setTitle("");
+          })
+        }}>Add it</button>
+      </div>
     )
   }
+
+  return isNewTask ? <NewTaskView /> : <TaskListInner />
 }
 
 export default TaskList;

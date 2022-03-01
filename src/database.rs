@@ -79,14 +79,14 @@ impl Database {
     async fn generate_id(&self, item: &InsertableItem) -> i32 {
         let mut id: i32 = rand::thread_rng().gen_range(0..1000);
 
-        let table_name = match item {
-            InsertableItem::Task(_) => "tasks",
-            InsertableItem::Habit(_) => "habits",
+        let query_str = match item {
+            InsertableItem::Task(_) => "SELECT id FROM tasks WHERE id = $1",
+            InsertableItem::Habit(_) => "SELECT id FROM habits WHERE id = $1",
         };
 
         while self
             .client
-            .query("SELECT id FROM $1 where id = $2", &[&table_name, &id])
+            .query(query_str, &[&id])
             .await
             .expect("Failed reading from database")
             .len()
