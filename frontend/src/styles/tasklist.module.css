@@ -144,9 +144,9 @@
 }
 
 .datePicker {
-    background: var(--inputBackground);
+    background: var(--inputBackground) !important;
     border-color: var(--border);
-    color: var(--foreground);
+    color: var(--foreground) !important;
     border-width: 1px;
     border-style: solid;
     border-radius: 20px 0px 0px 20px;
