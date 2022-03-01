@@ -22,16 +22,21 @@ const Task: React.FC<Props> = ({ core, onComplete, onDelete }) => {
 
   return (
     <div onClick={onComplete} className={styles.task}>
-      <div onClick={(e) => e.stopPropagation()} className={styles.textContainer}>
+      <div className={styles.textContainer}>
         <EditableTaskTitle
           text={core.title}
           completed={core.completed}
           onRename={onRename}
         />
-        <p className={styles.completionState}>{ `${formatDate(core.created_at_date)} at ${time} ` }</p>
+        <p className={styles.completionState}>
+          { `${formatDate(core.created_at_date)} at ${time}` }
+        </p>
       </div>
       <div onClick={(e) => e.stopPropagation()} className={styles.buttonContainer}>
-        <button onClick={() => onDelete()} className={styles.deleteButton}>🞩</button>
+        <button onClick={(e) => {
+          e.stopPropagation();
+          onDelete();
+        }} className={styles.deleteButton}>🞩</button>
       </div>
     </div>
   )

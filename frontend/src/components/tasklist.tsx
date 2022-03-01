@@ -1,4 +1,3 @@
-/// FIXME: the task names get shifted
 import { Task as ITask } from '../interfaces';
 import Task from './task';
 import styles from '../styles/tasklist.module.css';
@@ -12,16 +11,6 @@ interface State {
 const default_state: State = {
   new_task_title: "",
   loaded: false,
-}
-
-interface Props {
-  str: ITask;
-}
-
-const Ta: React.FC<Props> = ({ str }) => {
-  return (
-    <h1>{ str.title }</h1>
-  )
 }
 
 const TaskList: React.FC = () => {
@@ -53,8 +42,6 @@ const TaskList: React.FC = () => {
     return json;
   }
 
-  console.log(tasks);
-
   let completeTask = async(task: ITask) => {
     await fetch("http://localhost:8080/api/complete_task", {
       method: 'POST',
@@ -82,8 +69,6 @@ const TaskList: React.FC = () => {
     let newTasks = tasks.filter(x => x.id !== task.id);
     setTasks(newTasks);
   }
-
-  let renameTask = async(task: ITask) => {}
 
   useEffect(() => {
     getTasks();

@@ -19,10 +19,11 @@
     background: var(--buttonBackground);
     color: var(--inverseForeground);
     border: none;
-    width: 10vh;
-    height: 5vh;
+    width: 95px;
+    height: 47px;
     border-radius: 15px;
-    margin: 20px;
+    margin: 2vh;
+    margin-right: 20px;
     font-size: 15px;
     transition: ease-in;
     transition-duration: 100ms;
@@ -39,10 +40,11 @@
     color: var(--inverseForeground);
     border-width: 1px;
     border-style: solid;
-    width: 10vh;
-    height: 5vh;
+    width: 95px;
+    height: 47px;
     border-radius: 15px;
-    margin: 20px;
+    margin: 2vh;
+    margin-right: 20px;
     font-size: 15px;
 }
 
@@ -52,12 +54,13 @@
     background: var(--background);
     color: var(--foreground);
     border-color: var(--border);
-    width: 10vh;
+    width: 95px;
+    height: 47px;
     border-width: 1px;
     border-style: solid;
-    height: 5vh;
     border-radius: 15px;
-    margin: 20px;
+    margin: 2vh;
+    margin-left: 20px;
     font-size: 15px;
 }
 

@@ -10,25 +10,35 @@ interface Props {
 const EditableTaskTitle: React.FC<Props> = ({ text, completed, onRename }) => {
   let [state, setState] = useState(false);
   let [name, setName] = useState(text);
+  let [prevName, setPrevName] = useState(text);
 
   useEffect(() => {
     setName(text);
   }, [text])
 
   return state ?
-    <div className={styles.titleEditor}>
+  <div onClick={(e) => e.stopPropagation() } className={styles.titleEditor}>
       <input
+        onKeyDown={(e) => {
+          if(e.key == "Enter") {
+            setState(false);
+            onRename(name);
+            setPrevName(name);
+          } else if(e.key == "Escape") {
+            setState(false);
+            setName(prevName);
+          }
+        }}
         onBlur={() => {
-          setState(false)
+          setState(false);
           onRename(name);
+          setPrevName(name);
         }}
         onChange={(e) => setName(e.target.value)}
         value={name}
         className={styles.nameInput}
         type="text"
       />
-      {
-      <button onClick={() => setName(name)} className={styles.cancelButton}>Cancel</button> }
     </div> 
     :
       completed ?
@@ -37,7 +47,10 @@ const EditableTaskTitle: React.FC<Props> = ({ text, completed, onRename }) => {
         setState(true)
       }}>{ name }</h1>
       :
-        <h1 className={styles.uncompleted} onClick={() => setState(true)}>{ name }</h1>
+      <h1 className={styles.uncompleted} onClick={(e) => {
+        e.stopPropagation();
+        setState(true)
+      }}>{ name }</h1>
 }
 
 export default EditableTaskTitle;
