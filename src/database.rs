@@ -157,6 +157,12 @@ impl Database {
 
         task_vec.sort_by_key(|a| a.created_at);
         task_vec.reverse();
+        task_vec.sort_by_key(|a| {
+            a.deadline.unwrap_or(
+                NaiveDateTime::parse_from_str("9999-12-31 12:00:00", "%Y-%m-%d %H:%M:%S").unwrap(),
+            )
+        });
+
         task_vec.sort_by_key(|a| a.completed);
 
         task_vec

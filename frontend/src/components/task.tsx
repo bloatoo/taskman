@@ -1,6 +1,7 @@
 import { Task as ITask } from '../interfaces';
 import styles from '../styles/task.module.css';
 import EditableTaskTitle from './editableTaskTitle';
+import { formatDeadline } from '../dateUtils';
 
 interface Props {
   core: ITask
@@ -27,7 +28,7 @@ const Task: React.FC<Props> = ({ core, onComplete, onDelete }) => {
         />
         { core.deadline ? 
           <p className={styles.completionState}>
-            { core.deadline }
+            { formatDeadline(core.deadline) }
           </p>
           : 
           null

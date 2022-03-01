@@ -199,9 +199,9 @@ function validateAndFix(task: NewTask): NewTask | null {
     if(date == "") {
       if(time != "") {
         date = getDate(new Date().toISOString());
+      } else {
+        time = "23:59";
       }
-    } else {
-      time = "23:59";
     }
 
     return {
