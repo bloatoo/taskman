@@ -21,8 +21,7 @@ const TaskList: React.FC = () => {
   let getTasks = async() => {
     let res = await fetch("http://localhost:8080/api/tasks");
     let tasks: ITask[] = await res.json();
-
-    tasks.map(x => x.created_at_time = x.created_at_time.split(".")[0]);
+    console.log(tasks);
 
     setState({ ...state, loaded: true });
     setTasks(tasks);
@@ -116,7 +115,6 @@ const TaskList: React.FC = () => {
 
             <button className={styles.addTaskButton} onClick={() => {
               submitTask(state.new_task_title).then(task => {
-                task.created_at_time = task.created_at_time.split(".")[0];
                 setTasks([task, ...tasks])
               });
             }}>

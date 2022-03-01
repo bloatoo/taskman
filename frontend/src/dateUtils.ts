@@ -1,5 +1,13 @@
+function getTime(datetime: string): string {
+  return datetime.split("T")[1];
+}
+
+function getDate(datetime: string): string {
+  return datetime.split("T")[0]
+}
+
 function isToday(date: string): boolean {
-  let other = new Date().toISOString().split("T")[0];
+  let other = getDate(new Date().toISOString());
   return date === other;
 }
 
@@ -29,6 +37,8 @@ function daysSince(start: string) {
 }
 
 export {
+  getTime,
+  getDate,
   isToday,
   formatTimeHm,
   daysSince,

@@ -131,17 +131,13 @@ impl Database {
     pub async fn get_tasks(&self) -> Vec<Task> {
         let rows = self
             .client
-            .query(
-                "SELECT id, title, completed, created_at_date, created_at_time FROM tasks;",
-                &[],
-            )
+            .query("SELECT id, title, completed, created_at FROM tasks;", &[])
             .await
             .expect("Error while reading tasks from database");
 
         let mut task_vec: Vec<Task> = rows.iter().map(|x| Task::from_row(x).unwrap()).collect();
 
-        task_vec.sort_by_key(|a| a.created_at_time);
-        task_vec.sort_by_key(|a| a.created_at_date);
+        task_vec.sort_by_key(|a| a.created_at);
         task_vec.reverse();
         task_vec.sort_by_key(|a| a.completed);
 

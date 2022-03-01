@@ -1,7 +1,7 @@
 import { Task as ITask } from '../interfaces';
 import styles from '../styles/task.module.css';
 import EditableTaskTitle from './editableTaskTitle';
-import { formatDate, formatTimeHm } from '../dateUtils';
+import { formatDate, formatTimeHm, getTime, getDate } from '../dateUtils';
 
 interface Props {
   core: ITask
@@ -18,7 +18,7 @@ const Task: React.FC<Props> = ({ core, onComplete, onDelete }) => {
     })
   }
 
-  let time = formatTimeHm(core.created_at_time);
+  let time = formatTimeHm(getTime(core.created_at));
 
   return (
     <div onClick={onComplete} className={styles.task}>
@@ -29,7 +29,7 @@ const Task: React.FC<Props> = ({ core, onComplete, onDelete }) => {
           onRename={onRename}
         />
         <p className={styles.completionState}>
-          { `${formatDate(core.created_at_date)} at ${time}` }
+          { `${formatDate(getDate(core.created_at))} at ${time}` }
         </p>
       </div>
       <div onClick={(e) => e.stopPropagation()} className={styles.buttonContainer}>
