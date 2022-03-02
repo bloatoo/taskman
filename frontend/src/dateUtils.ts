@@ -29,7 +29,6 @@ function formatDate(date: string): string {
 }
 
 function formatDeadline(datetime: string): string {
-  console.log(datetime);
   let [date, time] = datetime.split("T");
   let days = daysTill(date);
 

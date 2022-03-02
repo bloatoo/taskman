@@ -21,8 +21,6 @@ const TaskList: React.FC = () => {
   let getTasks = async() => {
     let res = await fetch("http://localhost:8080/api/tasks");
     let tasks: ITask[] = await res.json();
-    console.log(tasks);
-
     setTasks(tasks);
   }
 
@@ -103,7 +101,7 @@ const TaskList: React.FC = () => {
               <Task
                 onComplete={() => completeTask(elem)}
                 onDelete={() => deleteTask(elem)}
-                key={tasks.indexOf(elem)}
+                key={elem.id}
                 core={elem} 
               />
               )
