@@ -34,16 +34,34 @@ function formatDeadline(datetime: string): string {
 
   if(days == 0) {
     let minutes = minutesTill(datetime);
+
+    if(minutes < 0) {
+      if(minutes == -1) {
+        return `Expired 1 minute ago`;
+      }
+
+      return `Expired ${Math.abs(minutes)} minutes ago`;
+    }
+
     if(minutes <= 60) {
-      return `In ${minutesTill(datetime)} minutes`;
+      if(minutes == 0) {
+        return `Now`
+      }
+
+      if(minutes == 1) {
+        return `In ${minutes} minute`;
+      }
+      return `In ${minutes} minutes`;
     } else {
       return `In ${Math.floor(minutes / 60)} hours`;
     }
-  } else if(days == 1) {
-    return `Tomorrow at ${formatTimeHm(time)}`;
-  } else {
-    return `In ${days} days at ${formatTimeHm(time)}`;
   }
+
+  if(days == 1) {
+    return `Tomorrow at ${formatTimeHm(time)}`;
+  }
+
+  return `In ${days} days at ${formatTimeHm(time)}`;
 }
 
 
