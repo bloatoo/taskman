@@ -14,7 +14,6 @@ const DEFAULT_TASK_ARRAY: ITask[] = [{
 
 const TaskList: React.FC = () => {
   let [tasks, setTasks] = useState<ITask[]>(DEFAULT_TASK_ARRAY);
-
   let [page, setPage] = useState(0);
   let [isNewTask, setIsNewTask] = useState(false);
 
@@ -44,7 +43,6 @@ const TaskList: React.FC = () => {
     });
 
     let arrTask = tasks.find(a => a.id === task.id);
-    console.log(arrTask);
     let idx = tasks.indexOf(arrTask!);
     delete tasks[idx!];
     task.completed = !task.completed;
@@ -185,6 +183,10 @@ const TaskList: React.FC = () => {
 function validateAndFix(task: NewTask): NewTask | null {
   if(task.title === "") {
     return null;
+  }
+
+  if(task.deadline === "" || task.deadline === " ") {
+    task.deadline = null;
   }
 
   if(task.deadline !== null) {

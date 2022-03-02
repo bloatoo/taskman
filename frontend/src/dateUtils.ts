@@ -33,7 +33,12 @@ function formatDeadline(datetime: string): string {
   let days = daysTill(date);
 
   if(days == 0) {
-    return `Today at ${formatTimeHm(time)}`;
+    let minutes = minutesTill(datetime);
+    if(minutes <= 60) {
+      return `In ${minutesTill(datetime)} minutes`;
+    } else {
+      return `In ${Math.floor(minutes / 60)} hours`;
+    }
   } else if(days == 1) {
     return `Tomorrow at ${formatTimeHm(time)}`;
   } else {
@@ -55,7 +60,16 @@ function daysTill(start: string) {
   const date2 = Date.now();
 
   const diff = date1.getTime() - date2;
-  return Math.ceil(diff / (1000 * 60 * 60 * 24) - 1)
+  return Math.ceil(diff / (1000 * 60 * 60 * 24))
+}
+
+function minutesTill(start: string) {
+  const date1 = new Date(start).getTime();
+  const date2 = Date.now();
+
+  const diff = date1 - date2;
+
+  return Math.ceil(diff / (1000 * 60));
 }
 
 export {
@@ -66,5 +80,6 @@ export {
   daysSince,
   daysTill,
   formatDate,
-  formatDeadline
+  formatDeadline,
+  minutesTill
 }

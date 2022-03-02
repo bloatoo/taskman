@@ -40,4 +40,12 @@ impl Task {
     pub fn completed(&self) -> &bool {
         &self.completed
     }
+
+    pub fn created_at(&self) -> &NaiveDateTime {
+        &self.created_at
+    }
+
+    pub fn deadline(&self) -> &Option<NaiveDateTime> {
+        &self.deadline
+    }
 }

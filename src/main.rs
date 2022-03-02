@@ -1,12 +1,14 @@
+use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::env;
+use std::process::Command;
 use std::sync::Arc;
-use tokio::sync::Mutex;
-use warp::hyper::header;
-use warp::hyper::Method;
-use warp::{Filter, Rejection, Reply};
-
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use taskman::database::{Database, InsertableItem};
+use tokio::sync::Mutex;
+use warp::hyper::{header, Method};
+use warp::{Filter, Rejection, Reply};
 
 pub struct State {
     db: Database,
@@ -28,8 +30,72 @@ async fn main() {
     println!("Connected to database.");
 
     let state = Arc::new(Mutex::new(State { db }));
+    let state_clone = state.clone();
 
-    web_server(state).await;
+    std::thread::spawn(move || {
+        web_server(state_clone);
+    });
+
+    let mut notification_state: HashMap<i32, u32> = HashMap::new();
+
+    loop {
+        check_tasks_and_notify_deadlines(&state, &mut notification_state).await;
+        tokio::time::sleep(Duration::from_millis(60000)).await;
+    }
+}
+
+async fn check_tasks_and_notify_deadlines(
+    state: &Arc<Mutex<State>>,
+    notification_state: &mut HashMap<i32, u32>,
+) {
+    let state_lock = state.lock().await;
+
+    let tasks = state_lock.db.get_tasks().await;
+
+    for task in tasks {
+        if let Some(ref deadline) = task.deadline() {
+            println!("{:#?}", task);
+            let notif_count = notification_state.get(task.id()).unwrap_or(&0);
+            let minutes = minutes_till_deadline(deadline);
+
+            match minutes {
+                DeadlineTime::Remaining(minutes) => {
+                    println!("{}", minutes);
+                    if minutes <= 60 && notif_count == &0 {
+                        notification_state.insert(*task.id(), 1);
+
+                        let body_str = format!(
+                            "Deadline for task \"{}\" will expire in {} minutes!",
+                            task.title(),
+                            minutes
+                        );
+
+                        Command::new("dunstify")
+                            .arg("Task Deadline")
+                            .arg(body_str)
+                            .spawn()
+                            .unwrap();
+                    }
+                }
+
+                _ => (),
+            }
+        }
+    }
+}
+
+pub enum DeadlineTime {
+    Remaining(u64),
+    Expired,
+}
+
+fn minutes_till_deadline(deadline: &NaiveDateTime) -> DeadlineTime {
+    let current_time = chrono::offset::Local::now().naive_local();
+    let ts = deadline.timestamp();
+
+    let minutes = deadline.signed_duration_since(current_time).num_minutes();
+
+    DeadlineTime::Remaining(minutes as u64)
 }
 
 async fn get_task(id: i32, state: Arc<Mutex<State>>) -> anyhow::Result<impl Reply, Rejection> {
@@ -142,6 +208,7 @@ async fn new_task(
     }
 }
 
+#[tokio::main]
 async fn web_server(state: Arc<Mutex<State>>) {
     let state = warp::any().map(move || state.clone());
 
