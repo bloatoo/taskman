@@ -163,8 +163,12 @@ const TaskList: React.FC = () => {
           if(valid !== null) {
             setIsNewTask(false);
             submitTask(valid).then(newTask => {
-              setTasks([newTask, ...tasks])
-              setTitle("");
+              if(newTask.deadline !== null) {
+                let dlTasks = tasks.filter(x => x.deadline !== null);
+                let newIdx = dlTasks.filter(x => new Date(x.deadline!).getTime() < new Date(newTask.deadline!).getTime()).length;
+                setTasks([...tasks.slice(0, newIdx), newTask, ...tasks.slice(newIdx, tasks.length)])
+                setTitle("");
+              }
             })
           }
         }}>Add Task</button>
