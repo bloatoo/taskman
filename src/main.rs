@@ -54,13 +54,11 @@ async fn check_tasks_and_notify_deadlines(
 
     for task in tasks {
         if let Some(ref deadline) = task.deadline() {
-            println!("{:#?}", task);
             let notif_count = notification_state.get(task.id()).unwrap_or(&0);
             let minutes = minutes_till_deadline(deadline);
 
             match minutes {
                 DeadlineTime::Remaining(minutes) => {
-                    println!("{}", minutes);
                     if minutes <= 60 && notif_count == &0 {
                         notification_state.insert(*task.id(), 1);
 
